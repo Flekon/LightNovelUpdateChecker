@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccentPink">#FFFF4081</color>
+    <color name="colorSplashBackground">#FF303030</color>
+
+    <color name="textColorPrimaryDark">@android:color/primary_text_dark</color>
+    <color name="textColorPrimaryLight">@android:color/primary_text_light</color>
+    <color name="textColorSecondaryDark">@android:color/secondary_text_dark</color>
+    <color name="textColorSecondaryLight">@android:color/secondary_text_dark</color>
+</resources>

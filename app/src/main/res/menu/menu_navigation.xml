@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_navigation_last_updates"
+        android:icon="@drawable/ic_nav_history_black_24dp"
+        android:title="@string/menu_navigation_last_updates" />
+
+    <item
+        android:id="@+id/menu_navigation_favorite"
+        android:icon="@drawable/ic_nav_favorite_black_24dp"
+        android:title="@string/menu_navigation_favorite" />
+
+    <item
+        android:id="@+id/menu_navigation_novels"
+        android:icon="@drawable/ic_nav_dashboard_black_24dp"
+        android:title="@string/menu_navigation_novels" />
+</menu>

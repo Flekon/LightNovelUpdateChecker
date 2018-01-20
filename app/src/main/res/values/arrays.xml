@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="refreshIntervalsName">
+        <item>@string/time_10_minute_title</item>
+        <item>@string/time_30_minute_title</item>
+        <item>@string/time_1_hour_title</item>
+        <item>@string/time_2_hour_title</item>
+        <item>@string/time_6_hour_title</item>
+        <item>@string/time_12_hour_title</item>
+        <item>@string/time_1_day_title</item>
+
+    </string-array>
+
+    <string-array name="refreshIntervalsValue">
+        <item>600000</item>
+        <item>1800000</item>
+        <item>3600000</item>
+        <item>7200000</item>
+        <item>21600000</item>
+        <item>43200000</item>
+        <item>86400000</item>
+    </string-array>
+
+    <string-array name="themesName">
+        <item>@string/theme_dark</item>
+        <item>@string/theme_light</item>
+    </string-array>
+
+    <string-array name="themesValue">
+        <item>Dark</item>
+        <item>Light</item>
+    </string-array>
+</resources>

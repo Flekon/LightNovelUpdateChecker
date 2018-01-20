@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settings_application_title" >
+        <ListPreference
+            android:key="setting.application.theme"
+            android:title="@string/settings_application_theme"
+            android:summary="%s"
+            android:defaultValue="Dark"
+            android:entries="@array/themesName"
+            android:entryValues="@array/themesValue" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settings_background_task_title" >
+        <CheckBoxPreference
+            android:key="setting.background_task.enable"
+            android:title="@string/settings_background_task_enable"
+            android:summary="@string/settings_background_task_enable_sum"
+            android:defaultValue="false" />
+        <ListPreference
+            android:dependency="setting.background_task.enable"
+            android:key="setting.background_task.refresh_interval"
+            android:title="@string/settings_background_task_interval"
+            android:summary="%s"
+            android:defaultValue="3600000"
+            android:entries="@array/refreshIntervalsName"
+            android:entryValues="@array/refreshIntervalsValue" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/settings_notification_title" >
+        <CheckBoxPreference
+            android:key="setting.notification.vibrate_enable"
+            android:title="@string/settings_notification_vibrate"
+            android:summary="@string/settings_notification_vibrate_sum"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="setting.notification.lights_enable"
+            android:title="@string/settings_notification_lights"
+            android:summary="@string/settings_notification_lights_sum"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:key="setting.notification.sound_enable"
+            android:title="@string/settings_notification_sound"
+            android:summary="@string/settings_notification_sound_sum"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+</PreferenceScreen>

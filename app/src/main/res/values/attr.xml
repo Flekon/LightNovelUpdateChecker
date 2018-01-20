@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewStyle">
+        <attr format="color" name="navigationBarColor"/>
+        <attr format="reference|color" name="listTextColorPrimary"/>
+        <attr format="reference|color" name="listTextColorSecondary"/>
+    </declare-styleable>
+</resources>
