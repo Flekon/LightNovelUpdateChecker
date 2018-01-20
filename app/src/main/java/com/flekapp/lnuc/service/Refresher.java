@@ -38,10 +38,12 @@ public class Refresher {
 
     private static int sNotificationId = 0;
 
+    private boolean mBackgroundWorking;
     private Context mContext;
     private NotificationManager mNotificationManager;
 
     public Refresher(Context context) {
+        mBackgroundWorking = false;
         mContext = context;
         mNotificationManager = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
     }
@@ -135,6 +137,7 @@ public class Refresher {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                mBackgroundWorking = true;
                 List<Chapter> newChapters = new ArrayList<>();
                 List<Novel> novels = new ArrayList<>(NovelsRepository.getFavoritesFromDB(mContext).values());
                 for (Novel novel : novels) {
@@ -155,6 +158,7 @@ public class Refresher {
                         newChapters.addAll(newNovelChapters);
                     }
                 }
+                mBackgroundWorking = false;
 
                 listener.onRefresh(newChapters);
             }
@@ -165,14 +169,20 @@ public class Refresher {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                mBackgroundWorking = true;
                 List<Novel> novels = null;
                 NovelSource novelSource = NovelSourceFactory.getSource(source);
                 if (novelSource != null) {
                     novels = novelSource.getNovels();
                 }
+                mBackgroundWorking = false;
 
                 listener.onRefresh(novels);
             }
         }).start();
+    }
+
+    public boolean isBackgroundWorking() {
+        return mBackgroundWorking;
     }
 }

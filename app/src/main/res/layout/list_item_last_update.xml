@@ -1,62 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="@dimen/last_update_list_item_padding_side"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/last_update_list_item_padding_top"
         android:paddingEnd="@dimen/last_update_list_item_padding_side"
-        android:orientation="vertical">
+        android:paddingStart="@dimen/last_update_list_item_padding_side"
+        android:paddingBottom="@dimen/last_update_list_item_padding_bottom" >
+
+
+        <ImageView
+            android:id="@+id/list_last_update_item_chapter_novel_image"
+            android:layout_width="@android:dimen/notification_large_icon_width"
+            android:layout_height="@android:dimen/notification_large_icon_height"
+            android:adjustViewBounds="false"
+            android:scaleType="fitCenter"
+            app:srcCompat="@mipmap/ic_launcher_round" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/last_update_list_item_padding_top"
+            android:layout_marginStart="4dp"
+            android:orientation="vertical" >
 
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/list_last_update_item_chapter_novel"
-                android:layout_width="wrap_content"
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Novel" />
+                android:orientation="horizontal" >
 
-            <TextView
-                android:id="@+id/list_last_update_item_chapter_release"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/list_last_update_item_chapter_novel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:text="@string/list_item_last_update_novel" />
+
+                <TextView
+                    android:id="@+id/list_last_update_item_chapter_release"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/list_item_last_update_release"
+                    android:textAlignment="textEnd" />
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Release"
-                android:textAlignment="textEnd" />
-        </LinearLayout>
+                android:orientation="horizontal" >
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/last_update_list_item_padding_bottom"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/list_last_update_item_chapter_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/list_item_last_update_number"
+                    android:textColor="@color/colorHoloBlueDark"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/list_last_update_item_chapter_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Number"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/list_last_update_item_chapter_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:paddingEnd="0dp"
-                android:paddingStart="@dimen/last_update_caption_padding_start"
-                android:text="Caption"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="?android:attr/textColorLink" />
+                <TextView
+                    android:id="@+id/list_last_update_item_chapter_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="@dimen/last_update_caption_padding_start"
+                    android:text="@string/list_item_last_update_caption"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textSize="18sp"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

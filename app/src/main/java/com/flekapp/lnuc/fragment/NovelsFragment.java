@@ -27,27 +27,25 @@ import java.util.List;
 public class NovelsFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView mListView;
+
+    private ListAdapter mAdapter;
     private List<String> mList;
     private List<String> mUrl;
 
     public NovelsFragment() {
-
+        mList = new ArrayList<>();
+        mUrl = new ArrayList<>();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle(getResources().getString(R.string.menu_navigation_novels));
-        return inflater.inflate(R.layout.fragment_novels, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_novels, container, false);
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_layout_list_novels);
         mListView = view.findViewById(R.id.list_novels);
+        mListView.setEmptyView(view.findViewById(R.id.list_novels_empty_text));
 
-        mList = new ArrayList<>();
-        mUrl = new ArrayList<>();
-        mSwipeRefreshLayout.setRefreshing(true);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -63,22 +61,25 @@ public class NovelsFragment extends Fragment {
             }
         });
 
-
-        refreshFragmentContent();
-
-        ListAdapter mAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+        mAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1, mList);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mListView.setAdapter(mAdapter);
     }
 
     private void refreshFragmentContent() {
         mList.clear();
         mUrl.clear();
-        mListView.invalidateViews();
+        mListView.setAdapter(mAdapter);
         final Handler handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message message) {
-                mListView.invalidateViews();
+                mListView.setAdapter(mAdapter);
                 mSwipeRefreshLayout.setRefreshing(false);
 
                 return false;

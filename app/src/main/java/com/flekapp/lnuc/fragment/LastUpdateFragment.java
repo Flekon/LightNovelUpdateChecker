@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.flekapp.lnuc.R;
@@ -27,28 +29,26 @@ import java.util.List;
 import java.util.Locale;
 
 public class LastUpdateFragment extends Fragment {
+    private Spinner mFilterSpinner;
     private TextView mTextView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView mListView;
-    private List<Chapter> mList;
-    private List<String> mUrl;
+
+    private LastUpdateListAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle(getResources().getString(R.string.menu_navigation_last_updates));
-        return inflater.inflate(R.layout.fragment_last_update, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_last_update, container, false);
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mTextView = view.findViewById(R.id.text_last_update_date);
+        mFilterSpinner = view.findViewById(R.id.last_update_spinner_filter);
+        mTextView = view.findViewById(R.id.last_update_date_value);
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_layout_list_last_update);
         mListView = view.findViewById(R.id.list_last_update);
+        mListView.setEmptyView(view.findViewById(R.id.list_last_update_empty_text));
 
-        mList = new ArrayList<>();
-        mUrl = new ArrayList<>();
+        initFilterSpinner();
 
-        mSwipeRefreshLayout.setRefreshing(true);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -59,16 +59,38 @@ public class LastUpdateFragment extends Fragment {
         mListView.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.get(position)));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mAdapter.getChapter(position).getUrl()));
                 startActivity(intent);
             }
         });
 
+        mAdapter = new LastUpdateListAdapter(getActivity().getApplicationContext(), new ArrayList<Chapter>());
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        mSwipeRefreshLayout.setRefreshing(true);
         refreshFragmentContent();
+    }
 
-        LastUpdateListAdapter mAdapter = new LastUpdateListAdapter(getActivity().getApplicationContext(), mList);
-        mListView.setAdapter(mAdapter);
+    private void initFilterSpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
+                R.array.lastUpdateFiltersValue, R.layout.filter_layout_spinner_item);
+        adapter.setDropDownViewResource(R.layout.filter_layout_spinner_dropdown_item);
+
+        mFilterSpinner.setAdapter(adapter);
+        mFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mAdapter.getFilter().filter(String.valueOf(parent.getItemAtPosition(position)));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+
+            }
+        });
     }
 
     private void refreshFragmentContent() {
@@ -78,14 +100,10 @@ public class LastUpdateFragment extends Fragment {
             mTextView.setText(date);
         }
 
-        mList.clear();
-        mUrl.clear();
-        List<Chapter> chapters = new ArrayList<>(NovelsRepository.getChaptersFromDB(getActivity().getApplicationContext()).values());
-        for (Chapter chapter : chapters) {
-            mList.add(chapter);
-            mUrl.add(chapter.getUrl());
-        }
-        mListView.invalidateViews();
+        List<Chapter> chapters = new ArrayList<>(NovelsRepository
+                .getChaptersFromDB(getActivity().getApplicationContext()).values());
+        mAdapter.setChapters(chapters, String.valueOf(mFilterSpinner.getSelectedItem()));
+        mListView.setAdapter(mAdapter);
         mSwipeRefreshLayout.setRefreshing(false);
     }
 }

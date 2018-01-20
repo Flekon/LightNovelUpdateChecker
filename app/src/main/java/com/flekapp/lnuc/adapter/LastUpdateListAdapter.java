@@ -1,30 +1,42 @@
 package com.flekapp.lnuc.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flekapp.lnuc.R;
 import com.flekapp.lnuc.data.entity.Chapter;
+import com.flekapp.lnuc.util.SettingsManager;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class LastUpdateListAdapter extends BaseAdapter {
+public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private LayoutInflater mLayoutInflater;
-    private List<Chapter> mChapters;
     private SimpleDateFormat mDateFormat;
+
+    private List<Chapter> mChapters;
+    private List<Chapter> mChaptersProtected;
+    private LastUpdateFilter mFilter;
 
     public LastUpdateListAdapter(Context context, List<Chapter> chapters) {
         mContext = context;
-        mChapters = chapters;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_time_format), Locale.getDefault());
+
+        setChapters(chapters);
+        mFilter = new LastUpdateFilter();
     }
 
     @Override
@@ -51,6 +63,8 @@ public class LastUpdateListAdapter extends BaseAdapter {
 
         Chapter chapter = getChapter(position);
 
+        ((ImageView) view.findViewById(R.id.list_last_update_item_chapter_novel_image))
+                .setImageResource(R.mipmap.ic_launcher_round);
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_number))
                 .setText(chapter.getNumber());
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_title))
@@ -60,10 +74,84 @@ public class LastUpdateListAdapter extends BaseAdapter {
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_release))
                 .setText(mDateFormat.format(chapter.getReleaseDate()));
 
+        // TODO make it normal...
+        switch (SettingsManager.getSettings().getApplicationTheme()) {
+            case "Dark":
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_title)).
+                        setTextColor(mContext.getResources().getColor(R.color.textColorPrimaryDark));
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_novel)).
+                        setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryDark));
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_release)).
+                        setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryDark));
+                break;
+            case "Light":
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_title)).
+                        setTextColor(mContext.getResources().getColor(R.color.textColorPrimaryLight));
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_novel)).
+                        setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryLight));
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_release)).
+                        setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryLight));
+                break;
+        }
+
         return view;
     }
 
-    private Chapter getChapter(int position) {
+    private void setChapters(List<Chapter> chapters) {
+        mChaptersProtected = new ArrayList<>(chapters);
+        mChapters = chapters;
+    }
+
+    public void setChapters(List<Chapter> chapters, CharSequence filter) {
+        mChaptersProtected = new ArrayList<>(chapters);
+        mChapters = filterChapter(chapters, filter);
+    }
+
+    public Chapter getChapter(int position) {
         return ((Chapter) getItem(position));
+    }
+
+    @Override
+    public Filter getFilter() {
+        return mFilter;
+    }
+
+    private List<Chapter> filterChapter(List<Chapter> chapters, CharSequence filter) {
+        Resources resources = mContext.getResources();
+
+        List<Chapter> result = new ArrayList<>();
+        if (filter == null ||
+                filter.equals(resources.getString(R.string.last_update_filters_all))){
+            result = chapters;
+        } else {
+            if (filter.equals(resources.getString(R.string.last_update_filters_today))) {
+                for (Chapter chapter : mChaptersProtected) {
+                    if (DateUtils.isToday(chapter.getReleaseDate().getTime())) {
+                        result.add(chapter);
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public class LastUpdateFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence filter) {
+            FilterResults result = new FilterResults();
+            List<Chapter> filteredChapters = filterChapter(mChaptersProtected, filter);
+            result.values = filteredChapters;
+            result.count = filteredChapters.size();
+
+            return result;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            mChapters = (ArrayList<Chapter>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

@@ -2,7 +2,6 @@
 <resources>
     <declare-styleable name="ViewStyle">
         <attr format="color" name="navigationBarColor"/>
-        <attr format="reference|color" name="listTextColorPrimary"/>
-        <attr format="reference|color" name="listTextColorSecondary"/>
+        <attr format="color" name="navigationCheckedButtonColor"/>
     </declare-styleable>
 </resources>

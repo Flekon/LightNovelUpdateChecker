@@ -30,4 +30,9 @@
         <item>Dark</item>
         <item>Light</item>
     </string-array>
+
+    <string-array name="lastUpdateFiltersValue">
+        <item>@string/last_update_filters_all</item>
+        <item>@string/last_update_filters_today</item>
+    </string-array>
 </resources>

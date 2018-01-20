@@ -20,24 +20,27 @@ import com.flekapp.lnuc.util.SettingsManager;
 import static android.support.v7.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class MainActivity extends ThemedActivity {
-    private Fragment mFragment;
     private FragmentManager mFragmentManager;
+    private Fragment mFragment;
+
+    private Fragment mLastUpdateFragment;
+    private Fragment mFavoriteFragment;
+    private Fragment mNovelsFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            // TODO refresh last fragment on resume or enter
             switch (item.getItemId()) {
                 case R.id.menu_navigation_last_updates:
-                    mFragment = new LastUpdateFragment();
+                    mFragment = mLastUpdateFragment;
                     break;
                 case R.id.menu_navigation_favorite:
-                    mFragment = new FavoriteFragment();
+                    mFragment = mFavoriteFragment;
                     break;
                 case R.id.menu_navigation_novels:
-                    mFragment = new NovelsFragment();
+                    mFragment = mNovelsFragment;
                     break;
             }
             final FragmentTransaction transaction = mFragmentManager.beginTransaction();
@@ -57,6 +60,9 @@ public class MainActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mLastUpdateFragment = new LastUpdateFragment();
+        mFavoriteFragment = new FavoriteFragment();
+        mNovelsFragment = new NovelsFragment();
         mFragmentManager = getSupportFragmentManager();
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -71,9 +77,7 @@ public class MainActivity extends ThemedActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.menu_main_refresh:
                 new Refresher(this).startRefreshFavorites();
                 return true;
