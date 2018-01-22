@@ -3,7 +3,6 @@ package com.flekapp.lnuc.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.flekapp.lnuc.data.NovelsContract.FavoriteNovels;
 import com.flekapp.lnuc.data.NovelsContract.ReleasedChapter;
@@ -23,7 +22,8 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
                 + FavoriteNovels.COLUMN_NAME + " TEXT NOT NULL, "
                 + FavoriteNovels.COLUMN_SHORT_NAME + " TEXT NOT NULL, "
                 + FavoriteNovels.COLUMN_SOURCE + " TEXT NOT NULL, "
-                + FavoriteNovels.COLUMN_URL + " TEXT NOT NULL);";
+                + FavoriteNovels.COLUMN_URL + " TEXT NOT NULL,"
+                + FavoriteNovels.COLUMN_IMAGE_URL + " TEXT NOT NULL);";
 
         db.execSQL(SQL_CREATE_FAVORITE_NOVELS_TABLE);
 
@@ -37,7 +37,6 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
                 + ReleasedChapter.COLUMN_RELEASE_AT + " INTEGER NOT NULL," +
                 " FOREIGN KEY (" + ReleasedChapter.COLUMN_NOVEL_ID + ") REFERENCES " + FavoriteNovels.TABLE_NAME + "(" + FavoriteNovels.COLUMN_ID + "));";
 
-        Log.i("NovelsDBHelper", "tables created !");
         db.execSQL(SQL_CREATE_CHAPTERS_TABLE);
     }
 

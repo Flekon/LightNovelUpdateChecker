@@ -30,11 +30,11 @@ public class NovelsFragment extends Fragment {
 
     private ListAdapter mAdapter;
     private List<String> mList;
-    private List<String> mUrl;
+    private List<Novel> mNovels;
 
     public NovelsFragment() {
         mList = new ArrayList<>();
-        mUrl = new ArrayList<>();
+        mNovels = new ArrayList<>();
     }
 
     @Override
@@ -56,10 +56,41 @@ public class NovelsFragment extends Fragment {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mUrl.get(position)));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mNovels.get(position).getUrl()));
                 startActivity(intent);
             }
         });
+        /*mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+                builder.setMessage("Add novel to favorite ?");
+                builder.setCancelable(true);
+
+                builder.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                NovelsDBHelper mDbHelper = new NovelsDBHelper(getActivity().getApplicationContext());
+                                SQLiteDatabase db = mDbHelper.getWritableDatabase();
+                                NovelsRepository.addFavorite(db, mNovels.get(position));
+                                dialog.cancel();
+                            }
+                        });
+
+                builder.setNegativeButton(
+                        "No",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alert = builder.create();
+                alert.show();
+                return false;
+            }
+        });*/
 
         mAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1, mList);
@@ -74,7 +105,7 @@ public class NovelsFragment extends Fragment {
 
     private void refreshFragmentContent() {
         mList.clear();
-        mUrl.clear();
+        mNovels.clear();
         mListView.setAdapter(mAdapter);
         final Handler handler = new Handler(new Handler.Callback() {
             @Override
@@ -91,7 +122,7 @@ public class NovelsFragment extends Fragment {
                 for (Novel novel : novels) {
                     mList.add(String.format("(%s) %s",
                             novel.getShortName(), novel.getName()));
-                    mUrl.add(novel.getUrl());
+                    mNovels.add(novel);
                 }
                 handler.sendEmptyMessage(0);
             }

@@ -34,8 +34,6 @@ public class Refresher {
         void onRefresh(List<Novel> novels);
     }
 
-    private static final String TAG = Refresher.class.getSimpleName();
-
     private static int sNotificationId = 0;
 
     private boolean mBackgroundWorking;
@@ -121,13 +119,6 @@ public class Refresher {
                     }
                 } else {
                     mNotificationManager.cancel(notificationId);
-                    /*final Notification n = new NotificationCompat.Builder(mContext)
-                            .setSmallIcon(R.drawable.ic_launcher_background)
-                            .setContentTitle(mContext.getResources().getString(R.string.app_name))
-                            .setContentText("No updates found")
-                            .setAutoCancel(true)
-                            .build();
-                    mNotificationManager.notify(notificationId, n);*/
                 }
             }
         });

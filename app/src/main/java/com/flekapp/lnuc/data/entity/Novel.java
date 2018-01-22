@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Novel {
     private Integer id;
+    private String imageUrl;
     private String name;
     private String shortName;
     private Source source;
@@ -17,6 +18,14 @@ public class Novel {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {

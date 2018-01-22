@@ -2,6 +2,7 @@ package com.flekapp.lnuc.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.flekapp.lnuc.R;
 import com.flekapp.lnuc.data.entity.Chapter;
+import com.flekapp.lnuc.util.ImageManager;
 import com.flekapp.lnuc.util.SettingsManager;
 
 import java.text.SimpleDateFormat;
@@ -25,6 +27,7 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private SimpleDateFormat mDateFormat;
+    private ImageManager imageManager;
 
     private List<Chapter> mChapters;
     private List<Chapter> mChaptersProtected;
@@ -34,6 +37,7 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
         mContext = context;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_time_format), Locale.getDefault());
+        imageManager = new ImageManager(context);
 
         setChapters(chapters);
         mFilter = new LastUpdateFilter();
@@ -63,8 +67,16 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
 
         Chapter chapter = getChapter(position);
 
-        ((ImageView) view.findViewById(R.id.list_last_update_item_chapter_novel_image))
-                .setImageResource(R.mipmap.ic_launcher_round);
+        String imageUrl = chapter.getNovel().getImageUrl();
+        Bitmap image = imageManager.getImage(imageUrl);
+        if (image != null) {
+            ((ImageView) view.findViewById(R.id.list_last_update_item_chapter_novel_image))
+                    .setImageBitmap(image);
+        } else {
+            ((ImageView) view.findViewById(R.id.list_last_update_item_chapter_novel_image))
+                    .setImageResource(R.mipmap.ic_launcher_round);
+            imageManager.saveImage(imageUrl);
+        }
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_number))
                 .setText(chapter.getNumber());
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_title))

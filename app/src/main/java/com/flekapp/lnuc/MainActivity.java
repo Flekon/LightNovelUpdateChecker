@@ -66,7 +66,7 @@ public class MainActivity extends ThemedActivity {
         mFragmentManager = getSupportFragmentManager();
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.setSelectedItemId(R.id.menu_navigation_last_updates);
+//        navigation.setSelectedItemId(R.id.menu_navigation_last_updates);
     }
 
     @Override

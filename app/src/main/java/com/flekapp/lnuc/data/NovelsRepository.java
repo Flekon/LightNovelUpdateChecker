@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.flekapp.lnuc.data.NovelsContract.FavoriteNovels;
@@ -12,41 +13,12 @@ import com.flekapp.lnuc.data.entity.Chapter;
 import com.flekapp.lnuc.data.entity.Novel;
 import com.flekapp.lnuc.data.entity.Source;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 public class NovelsRepository {
-    public static List<Novel> getFavorites() {
-        List<Novel> novels = new ArrayList<>();
-        Novel againstTheGods = new Novel();
-        againstTheGods.setName("Against The Gods");
-        againstTheGods.setShortName("ATG");
-        againstTheGods.setUrl("https://lnmtl.com/novel/against-the-gods");
-        againstTheGods.setSource(Source.LNMTL);
-        againstTheGods.setLastChapter("#1050");
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2018, 0 ,17, 12, 0);
-        againstTheGods.setLastUpdate(calendar.getTime());
-        novels.add(againstTheGods);
-
-        Novel chaoticSwordGod = new Novel();
-        chaoticSwordGod.setName("Chaotic Sword God");
-        chaoticSwordGod.setShortName("CSG");
-        chaoticSwordGod.setUrl("https://lnmtl.com/novel/chaotic-sword-god");
-        chaoticSwordGod.setSource(Source.LNMTL);
-        chaoticSwordGod.setLastChapter("#2393");
-        calendar = Calendar.getInstance();
-        calendar.set(2018, 0 ,17, 12, 0);
-        chaoticSwordGod.setLastUpdate(calendar.getTime());
-        novels.add(chaoticSwordGod);
-
-        return novels;
-    }
-
-    public static Map<Integer, Novel> getFavoritesFromDB(Context context) {
+    public static Map<Integer, Novel> getFavoritesFromDB(@NonNull Context context) {
         Map<Integer, Novel> novels = new LinkedHashMap<>();
 
         NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
@@ -67,6 +39,8 @@ public class NovelsRepository {
                     .getColumnIndex(FavoriteNovels.COLUMN_SOURCE));
             String url = cursor.getString(cursor
                     .getColumnIndex(FavoriteNovels.COLUMN_URL));
+            String imageUrl = cursor.getString(cursor
+                    .getColumnIndex(FavoriteNovels.COLUMN_IMAGE_URL));
             String lastChapterNumber = cursor.getString(cursor
                     .getColumnIndex("lastChapter"));
             Long lastChapterReleaseAt = cursor.getLong(cursor
@@ -77,6 +51,7 @@ public class NovelsRepository {
             novel.setName(name);
             novel.setShortName(shortName);
             novel.setUrl(url);
+            novel.setImageUrl(imageUrl);
             novel.setSource(Source.getByName(source));
             novel.setLastChapter(lastChapterNumber);
             Calendar calendar = Calendar.getInstance();
@@ -92,12 +67,13 @@ public class NovelsRepository {
     // INSERT INTO favorite_novels (NAME, SHORT_NAME, SOURCE, URL) VALUES ("TEST", "TEST","TEST","http://test.ru")
     // INSERT INTO chapters (NOVEL_ID, NUMBER, TITLE, URL, STATUS, RELEASE_AT) VALUES (1, "#1111", "Test chapter 1", "http://test.ru/ch1", "tr", 123456789)
     // SELECT * FROM 'favorite_novels' fn INNER JOIN (SELECT novel_id, MAX(number), MAX(release_at) FROM chapters group by NOVEL_ID) c ON c.novel_id = fn._id;
-    public static void addFavorite(SQLiteDatabase db, Novel novel) {
+    public static void addFavorite(@NonNull SQLiteDatabase db, @NonNull Novel novel) {
         ContentValues values = new ContentValues();
         values.put(FavoriteNovels.COLUMN_NAME, novel.getName());
         values.put(FavoriteNovels.COLUMN_SHORT_NAME, novel.getShortName());
         values.put(FavoriteNovels.COLUMN_SOURCE, novel.getSource().getName());
         values.put(FavoriteNovels.COLUMN_URL, novel.getUrl());
+        values.put(FavoriteNovels.COLUMN_IMAGE_URL, novel.getImageUrl());
 
         long newRowId = db.insert(FavoriteNovels.TABLE_NAME, null, values);
 
@@ -106,7 +82,7 @@ public class NovelsRepository {
         }
     }
 
-    public static Map<Integer, Chapter> getChaptersFromDB(Context context) {
+    public static Map<Integer, Chapter> getChaptersFromDB(@NonNull Context context) {
         Map<Integer, Chapter> chapters = new LinkedHashMap<>();
 
         Map<Integer, Novel> novels = NovelsRepository.getFavoritesFromDB(context);
@@ -150,7 +126,7 @@ public class NovelsRepository {
         return chapters;
     }
 
-    public static void addChapter(Context context, Chapter chapter) {
+    public static void addChapter(@NonNull Context context, @NonNull Chapter chapter) {
         NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
@@ -169,7 +145,7 @@ public class NovelsRepository {
         }
     }
 
-    public static void initFavorites(Context context) {
+    public static void initFavorites(@NonNull Context context) {
         NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 

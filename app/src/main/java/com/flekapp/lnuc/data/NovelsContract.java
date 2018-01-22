@@ -11,6 +11,7 @@ public class NovelsContract {
         public final static String COLUMN_SHORT_NAME = "SHORT_NAME";
         public final static String COLUMN_SOURCE = "SOURCE";
         public final static String COLUMN_URL = "URL";
+        public final static String COLUMN_IMAGE_URL = "IMAGE_URL";
     }
 
     public static final class ReleasedChapter implements BaseColumns {

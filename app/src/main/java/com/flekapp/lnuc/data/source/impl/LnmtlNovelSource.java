@@ -77,6 +77,7 @@ public class LnmtlNovelSource implements NovelSource {
                             novel.setName(name);
                             novel.setShortName(shortName);
                             novel.setUrl(novelUrl);
+                            novel.setImageUrl(imageUrl);
                             novel.setSource(Source.LNMTL);
 
                             novels.add(novel);
