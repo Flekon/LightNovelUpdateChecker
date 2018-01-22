@@ -37,7 +37,7 @@ public class ThemedActivity extends AppCompatActivity {
 
     protected void checkCurrentTheme() {
         String newTheme = SettingsManager.getSettings().getApplicationTheme();
-        if (!currentTheme.equals(newTheme)) {
+        if (newTheme != null && !currentTheme.equals(newTheme)) {
             recreate();
         }
     }

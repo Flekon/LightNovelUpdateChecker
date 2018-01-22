@@ -22,7 +22,7 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
                 + FavoriteNovels.COLUMN_NAME + " TEXT NOT NULL, "
                 + FavoriteNovels.COLUMN_SHORT_NAME + " TEXT NOT NULL, "
                 + FavoriteNovels.COLUMN_SOURCE + " TEXT NOT NULL, "
-                + FavoriteNovels.COLUMN_URL + " TEXT NOT NULL,"
+                + FavoriteNovels.COLUMN_URL + " TEXT UNIQUE NOT NULL,"
                 + FavoriteNovels.COLUMN_IMAGE_URL + " TEXT NOT NULL);";
 
         db.execSQL(SQL_CREATE_FAVORITE_NOVELS_TABLE);
@@ -32,7 +32,7 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
                 + ReleasedChapter.COLUMN_NOVEL_ID + " INTEGER NOT NULL, "
                 + ReleasedChapter.COLUMN_NUMBER + " TEXT NOT NULL, "
                 + ReleasedChapter.COLUMN_TITLE + " TEXT NOT NULL, "
-                + ReleasedChapter.COLUMN_URL + " TEXT NOT NULL, "
+                + ReleasedChapter.COLUMN_URL + " TEXT UNIQUE NOT NULL, "
                 + ReleasedChapter.COLUMN_STATUS + " TEXT NOT NULL, "
                 + ReleasedChapter.COLUMN_RELEASE_AT + " INTEGER NOT NULL," +
                 " FOREIGN KEY (" + ReleasedChapter.COLUMN_NOVEL_ID + ") REFERENCES " + FavoriteNovels.TABLE_NAME + "(" + FavoriteNovels.COLUMN_ID + "));";

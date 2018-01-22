@@ -12,6 +12,7 @@ import com.flekapp.lnuc.data.NovelsContract.ReleasedChapter;
 import com.flekapp.lnuc.data.entity.Chapter;
 import com.flekapp.lnuc.data.entity.Novel;
 import com.flekapp.lnuc.data.entity.Source;
+import com.flekapp.lnuc.util.ImageManager;
 
 import java.util.Calendar;
 import java.util.LinkedHashMap;
@@ -67,13 +68,18 @@ public class NovelsRepository {
     // INSERT INTO favorite_novels (NAME, SHORT_NAME, SOURCE, URL) VALUES ("TEST", "TEST","TEST","http://test.ru")
     // INSERT INTO chapters (NOVEL_ID, NUMBER, TITLE, URL, STATUS, RELEASE_AT) VALUES (1, "#1111", "Test chapter 1", "http://test.ru/ch1", "tr", 123456789)
     // SELECT * FROM 'favorite_novels' fn INNER JOIN (SELECT novel_id, MAX(number), MAX(release_at) FROM chapters group by NOVEL_ID) c ON c.novel_id = fn._id;
-    public static void addFavorite(@NonNull SQLiteDatabase db, @NonNull Novel novel) {
+    public static void addFavorite(@NonNull Context context, @NonNull Novel novel) {
+        NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
         ContentValues values = new ContentValues();
         values.put(FavoriteNovels.COLUMN_NAME, novel.getName());
         values.put(FavoriteNovels.COLUMN_SHORT_NAME, novel.getShortName());
         values.put(FavoriteNovels.COLUMN_SOURCE, novel.getSource().getName());
         values.put(FavoriteNovels.COLUMN_URL, novel.getUrl());
         values.put(FavoriteNovels.COLUMN_IMAGE_URL, novel.getImageUrl());
+
+        new ImageManager(context).saveImage(novel.getImageUrl());
 
         long newRowId = db.insert(FavoriteNovels.TABLE_NAME, null, values);
 
@@ -146,21 +152,18 @@ public class NovelsRepository {
     }
 
     public static void initFavorites(@NonNull Context context) {
-        NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
-        SQLiteDatabase db = mDbHelper.getWritableDatabase();
-
         Novel againstTheGods = new Novel();
         againstTheGods.setName("Against The Gods");
         againstTheGods.setShortName("ATG");
         againstTheGods.setUrl("https://lnmtl.com/novel/against-the-gods");
         againstTheGods.setSource(Source.LNMTL);
-        addFavorite(db, againstTheGods);
+        addFavorite(context, againstTheGods);
 
         Novel chaoticSwordGod = new Novel();
         chaoticSwordGod.setName("Chaotic Sword God");
         chaoticSwordGod.setShortName("CSG");
         chaoticSwordGod.setUrl("https://lnmtl.com/novel/chaotic-sword-god");
         chaoticSwordGod.setSource(Source.LNMTL);
-        addFavorite(db, chaoticSwordGod);
+        addFavorite(context, chaoticSwordGod);
     }
 }

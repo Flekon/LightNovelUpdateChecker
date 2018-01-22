@@ -75,7 +75,6 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
         } else {
             ((ImageView) view.findViewById(R.id.list_last_update_item_chapter_novel_image))
                     .setImageResource(R.mipmap.ic_launcher_round);
-            imageManager.saveImage(imageUrl);
         }
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_number))
                 .setText(chapter.getNumber());
@@ -87,7 +86,11 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
                 .setText(mDateFormat.format(chapter.getReleaseDate()));
 
         // TODO make it normal...
-        switch (SettingsManager.getSettings().getApplicationTheme()) {
+        String currentTheme = SettingsManager.getSettings().getApplicationTheme();
+        if (currentTheme == null) {
+            currentTheme = "Dark";
+        }
+        switch (currentTheme) {
             case "Dark":
                 ((TextView) view.findViewById(R.id.list_last_update_item_chapter_title)).
                         setTextColor(mContext.getResources().getColor(R.color.textColorPrimaryDark));

@@ -71,8 +71,8 @@ public class LastUpdateFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        /*mSwipeRefreshLayout.setRefreshing(true);
-        refreshFragmentContent();*/
+        mSwipeRefreshLayout.setRefreshing(true);
+        refreshFragmentContent();
     }
 
     private void initFilterSpinner() {

@@ -1,5 +1,7 @@
 package com.flekapp.lnuc.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.flekapp.lnuc.R;
+import com.flekapp.lnuc.data.NovelsRepository;
 import com.flekapp.lnuc.data.entity.Novel;
 import com.flekapp.lnuc.data.entity.Source;
 import com.flekapp.lnuc.service.Refresher;
@@ -60,10 +63,10 @@ public class NovelsFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        /*mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity().getApplicationContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage("Add novel to favorite ?");
                 builder.setCancelable(true);
 
@@ -71,9 +74,7 @@ public class NovelsFragment extends Fragment {
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                NovelsDBHelper mDbHelper = new NovelsDBHelper(getActivity().getApplicationContext());
-                                SQLiteDatabase db = mDbHelper.getWritableDatabase();
-                                NovelsRepository.addFavorite(db, mNovels.get(position));
+                                NovelsRepository.addFavorite(getActivity().getApplicationContext(), mNovels.get(position));
                                 dialog.cancel();
                             }
                         });
@@ -88,9 +89,10 @@ public class NovelsFragment extends Fragment {
 
                 AlertDialog alert = builder.create();
                 alert.show();
-                return false;
+
+                return true;
             }
-        });*/
+        });
 
         mAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1, mList);
