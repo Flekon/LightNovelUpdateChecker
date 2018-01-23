@@ -141,8 +141,9 @@ public class Refresher {
                         for (Chapter chapter : chapters) {
                             if (novel.getLastUpdate() == null ||
                                     novel.getLastUpdate().before(chapter.getReleaseDate())) {
-                                newNovelChapters.add(chapter);
-                                NovelsRepository.addChapter(mContext, chapter);
+                                if (NovelsRepository.addChapter(mContext, chapter)) {
+                                    newNovelChapters.add(chapter);
+                                }
                             }
                         }
 

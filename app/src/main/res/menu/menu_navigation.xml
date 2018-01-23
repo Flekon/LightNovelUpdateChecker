@@ -7,9 +7,9 @@
         android:title="@string/menu_navigation_last_updates" />
 
     <item
-        android:id="@+id/menu_navigation_favorite"
+        android:id="@+id/menu_navigation_favorites"
         android:icon="@drawable/ic_nav_favorite_black_24dp"
-        android:title="@string/menu_navigation_favorite" />
+        android:title="@string/menu_navigation_favorites" />
 
     <item
         android:id="@+id/menu_navigation_novels"

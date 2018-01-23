@@ -47,7 +47,8 @@ public class LnmtlNovelSource implements NovelSource {
         boolean fetchNextPage = true;
 
         try {
-            while (fetchNextPage) {
+            // TODO uncomment
+            //while (fetchNextPage) {
                 page++;
                 String url = urlTemplate.concat(String.valueOf(page));
                 Document doc = Jsoup.connect(url)
@@ -86,7 +87,7 @@ public class LnmtlNovelSource implements NovelSource {
                 } else {
                     fetchNextPage = false;
                 }
-            }
+            //}
 
             return novels;
         } catch (IOException e) {

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.flekapp.lnuc.fragment.SettingsFragment;
+import com.flekapp.lnuc.fragment.PreferenceSettingsFragment;
 import com.flekapp.lnuc.service.RefreshService;
 import com.flekapp.lnuc.util.SettingsManager;
 
@@ -16,7 +16,7 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.settings_main_container, new SettingsFragment())
+                .replace(R.id.settings_preference_container, new PreferenceSettingsFragment())
                 .commit();
         SettingsManager.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }

@@ -7,7 +7,7 @@
 
     <!-- Menu values -->
     <string name="menu_navigation_last_updates">Last updates</string>
-    <string name="menu_navigation_favorite">Favorite</string>
+    <string name="menu_navigation_favorites">Favorites</string>
     <string name="menu_navigation_novels">Novels</string>
 
     <string name="menu_main_refresh">Refresh</string>
@@ -23,7 +23,7 @@
 
     <string name="settings_background_task_title">Background service</string>
     <string name="settings_background_task_enable">Enable service</string>
-    <string name="settings_background_task_enable_sum">Refresh favorite novels in background</string>
+    <string name="settings_background_task_enable_sum">Refresh favorites novels in background</string>
     <string name="settings_background_task_interval">Refresh interval</string>
 
     <string name="settings_notification_title">Notification</string>
@@ -59,4 +59,10 @@
     <string name="list_item_last_update_release">Release</string>
     <string name="list_item_last_update_number">Number</string>
     <string name="list_item_last_update_caption">Caption</string>
+
+    <string name="list_item_novel_short_name">Short Name</string>
+    <string name="list_item_novel_name">Name</string>
+    <string name="list_item_novel_last_chapter_number">Number</string>
+    <string name="list_item_novel_last_chapter_title">Title</string>
+    <string name="list_item_novel_last_chapter_release">Release</string>
 </resources>

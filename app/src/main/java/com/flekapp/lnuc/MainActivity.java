@@ -36,7 +36,7 @@ public class MainActivity extends ThemedActivity {
                 case R.id.menu_navigation_last_updates:
                     mFragment = mLastUpdateFragment;
                     break;
-                case R.id.menu_navigation_favorite:
+                case R.id.menu_navigation_favorites:
                     mFragment = mFavoriteFragment;
                     break;
                 case R.id.menu_navigation_novels:

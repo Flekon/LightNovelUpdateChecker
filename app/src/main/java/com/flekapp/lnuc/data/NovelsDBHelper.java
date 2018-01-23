@@ -35,9 +35,16 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
                 + ReleasedChapter.COLUMN_URL + " TEXT UNIQUE NOT NULL, "
                 + ReleasedChapter.COLUMN_STATUS + " TEXT NOT NULL, "
                 + ReleasedChapter.COLUMN_RELEASE_AT + " INTEGER NOT NULL," +
-                " FOREIGN KEY (" + ReleasedChapter.COLUMN_NOVEL_ID + ") REFERENCES " + FavoriteNovels.TABLE_NAME + "(" + FavoriteNovels.COLUMN_ID + "));";
+                " FOREIGN KEY (" + ReleasedChapter.COLUMN_NOVEL_ID + ")" +
+                " REFERENCES " + FavoriteNovels.TABLE_NAME + "(" + FavoriteNovels.COLUMN_ID + ")" +
+                " ON DELETE CASCADE);";
 
         db.execSQL(SQL_CREATE_CHAPTERS_TABLE);
+    }
+
+    @Override
+    public void onConfigure(SQLiteDatabase db){
+        db.setForeignKeyConstraintsEnabled(true);
     }
 
     @Override

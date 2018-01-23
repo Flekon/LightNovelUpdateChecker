@@ -1,6 +1,7 @@
 package com.flekapp.lnuc.fragment;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.flekapp.lnuc.R;
 import com.flekapp.lnuc.data.NovelsRepository;
@@ -63,26 +65,32 @@ public class NovelsFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        final Context context = getActivity().getApplicationContext();
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage("Add novel to favorite ?");
-                builder.setCancelable(true);
+                final Novel novel = mNovels.get(position);
 
-                builder.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                NovelsRepository.addFavorite(getActivity().getApplicationContext(), mNovels.get(position));
-                                dialog.cancel();
-                            }
-                        });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(String.format("Add \"%s\" to favorites ?", novel.getName()));
+                builder.setCancelable(true);
 
                 builder.setNegativeButton(
                         "No",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                builder.setPositiveButton(
+                        "Yes",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                boolean isAdded = NovelsRepository.addFavorite(context, novel);
+                                if (isAdded) {
+                                    Toast.makeText(context, "Novel add to favorites !", Toast.LENGTH_LONG).show();
+                                }
                                 dialog.cancel();
                             }
                         });
@@ -94,7 +102,7 @@ public class NovelsFragment extends Fragment {
             }
         });
 
-        mAdapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+        mAdapter = new ArrayAdapter<>(context,
                 android.R.layout.simple_list_item_1, mList);
 
         return view;

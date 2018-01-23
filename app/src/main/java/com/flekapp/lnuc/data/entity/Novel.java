@@ -9,7 +9,8 @@ public class Novel {
     private String shortName;
     private Source source;
     private String url;
-    private String lastChapter;
+    private String lastChapterNumber;
+    private String lastChapterTitle;
     private Date lastUpdate;
 
     public Integer getId() {
@@ -60,12 +61,20 @@ public class Novel {
         this.url = url;
     }
 
-    public String getLastChapter() {
-        return lastChapter;
+    public String getLastChapterNumber() {
+        return lastChapterNumber;
     }
 
-    public void setLastChapter(String lastChapter) {
-        this.lastChapter = lastChapter;
+    public void setLastChapterNumber(String lastChapterNumber) {
+        this.lastChapterNumber = lastChapterNumber;
+    }
+
+    public String getLastChapterTitle() {
+        return lastChapterTitle;
+    }
+
+    public void setLastChapterTitle(String lastChapterTitle) {
+        this.lastChapterTitle = lastChapterTitle;
     }
 
     public Date getLastUpdate() {

@@ -3,10 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragment.FavoriteFragment">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_layout_list_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/list_favorites"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/menu_navigation_favorite"
-        android:textStyle="bold"
-        android:layout_gravity="center"/>
+        android:id="@+id/list_favorites_empty_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/list_empty_text"
+        android:visibility="gone" />
+
 </FrameLayout>

@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
+public class ListAdapterLastUpdates extends BaseAdapter implements Filterable {
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private SimpleDateFormat mDateFormat;
@@ -33,7 +33,7 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
     private List<Chapter> mChaptersProtected;
     private LastUpdateFilter mFilter;
 
-    public LastUpdateListAdapter(Context context, List<Chapter> chapters) {
+    public ListAdapterLastUpdates(Context context, List<Chapter> chapters) {
         mContext = context;
         mLayoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDateFormat = new SimpleDateFormat(context.getResources().getString(R.string.date_time_format), Locale.getDefault());
@@ -46,6 +46,10 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
     @Override
     public int getCount() {
         return mChapters.size();
+    }
+
+    public Chapter getChapter(int position) {
+        return ((Chapter) getItem(position));
     }
 
     @Override
@@ -120,10 +124,6 @@ public class LastUpdateListAdapter extends BaseAdapter implements Filterable {
     public void setChapters(List<Chapter> chapters, CharSequence filter) {
         mChaptersProtected = new ArrayList<>(chapters);
         mChapters = filterChapter(chapters, filter);
-    }
-
-    public Chapter getChapter(int position) {
-        return ((Chapter) getItem(position));
     }
 
     @Override

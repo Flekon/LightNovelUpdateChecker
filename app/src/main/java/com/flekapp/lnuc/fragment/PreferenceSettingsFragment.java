@@ -5,7 +5,7 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 
 import com.flekapp.lnuc.R;
 
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class PreferenceSettingsFragment extends PreferenceFragmentCompat {
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.fragment_setting, rootKey);

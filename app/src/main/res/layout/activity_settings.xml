@@ -6,7 +6,7 @@
     tools:context="com.flekapp.lnuc.MainActivity">
 
     <FrameLayout
-        android:id="@+id/settings_main_container"
+        android:id="@+id/settings_preference_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true">

@@ -17,7 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.flekapp.lnuc.R;
-import com.flekapp.lnuc.adapter.LastUpdateListAdapter;
+import com.flekapp.lnuc.adapter.ListAdapterLastUpdates;
 import com.flekapp.lnuc.data.NovelsRepository;
 import com.flekapp.lnuc.data.entity.Chapter;
 import com.flekapp.lnuc.util.SettingsManager;
@@ -34,7 +34,7 @@ public class LastUpdateFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ListView mListView;
 
-    private LastUpdateListAdapter mAdapter;
+    private ListAdapterLastUpdates mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +64,7 @@ public class LastUpdateFragment extends Fragment {
             }
         });
 
-        mAdapter = new LastUpdateListAdapter(getActivity().getApplicationContext(), new ArrayList<Chapter>());
+        mAdapter = new ListAdapterLastUpdates(getActivity().getApplicationContext(), new ArrayList<Chapter>());
 
         return view;
     }
@@ -77,8 +77,8 @@ public class LastUpdateFragment extends Fragment {
 
     private void initFilterSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity().getApplicationContext(),
-                R.array.lastUpdateFiltersValue, R.layout.filter_layout_spinner_item);
-        adapter.setDropDownViewResource(R.layout.filter_layout_spinner_dropdown_item);
+                R.array.lastUpdateFiltersValue, R.layout.spinner_last_update_filter_item);
+        adapter.setDropDownViewResource(R.layout.spinner_last_update_filter_dropdown_item);
 
         mFilterSpinner.setAdapter(adapter);
         mFilterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

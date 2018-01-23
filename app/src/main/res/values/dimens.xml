@@ -4,5 +4,5 @@
     <dimen name="last_update_list_item_padding_bottom">10dp</dimen>
     <dimen name="last_update_list_item_padding_side">16dp</dimen>
 
-    <dimen name="last_update_caption_padding_start">8dp</dimen>
+    <dimen name="list_item_padding_start">8dp</dimen>
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.io.File;
@@ -14,15 +15,18 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import static android.os.Environment.MEDIA_MOUNTED;
+import static android.os.Environment.getExternalStorageState;
+
 public class ImageManager {
     private static final String TAG = ImageManager.class.getSimpleName();
 
     static class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-        Context mContext;
+        private File mCacheDir;
         String resultFileName;
 
-        DownloadImage(Context context, String fileName) {
-            mContext = context;
+        DownloadImage(File cacheDir, String fileName) {
+            mCacheDir = cacheDir;
             resultFileName = fileName;
         }
 
@@ -48,9 +52,9 @@ public class ImageManager {
         }
 
         private void saveImage(Bitmap b, String imageName) {
-            FileOutputStream stream;
             try {
-                stream = mContext.openFileOutput(imageName, Context.MODE_PRIVATE);
+                File file = new File(mCacheDir, imageName);
+                FileOutputStream stream = new FileOutputStream(file);
                 b.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 stream.close();
             } catch (Exception e) {
@@ -59,15 +63,27 @@ public class ImageManager {
         }
     }
 
-    private Context mContext;
+    private File mCacheDir;
 
     public ImageManager(Context context) {
-        mContext = context;
+        String sdState = getExternalStorageState();
+        if (MEDIA_MOUNTED.equals(sdState)) {
+            mCacheDir = context.getExternalFilesDir("images");
+            if (mCacheDir == null) {
+                mCacheDir = context.getCacheDir();
+            }
+        } else {
+            mCacheDir = context.getCacheDir();
+        }
+        if(!mCacheDir.exists()) {
+            if (!mCacheDir.mkdirs()) {
+                Log.e(TAG, "Can't create cache directory for context.");
+            }
+        }
     }
 
-    public String getFileNameByUrl(String url) {
+    private String getFileNameByUrl(@NonNull String url) {
         try {
-            long start = System.nanoTime();
             MessageDigest md = MessageDigest.getInstance("MD5");
             md.update(url.getBytes());
             byte data[] = md.digest();
@@ -75,39 +91,37 @@ public class ImageManager {
             for (int i = data.length - 1; i >= 0; i--) {
                 sb.append(Integer.toString((data[i] & 0xff) + 0x100, 16).substring(1));
             }
-            long end = System.nanoTime();
-            Log.d(TAG, "time: " + String.valueOf(end - start));
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            Log.d(TAG, "Exception thrown while hashing url with sha-256.");
-            return null;
+            Log.e(TAG, "Exception thrown while hashing url with sha-256.");
+            return url;
         }
-
     }
 
     public void saveImage(String url) {
-        new DownloadImage(mContext, getFileNameByUrl(url)).execute(url);
+        new DownloadImage(mCacheDir, getFileNameByUrl(url)).execute(url);
     }
 
     public Bitmap getImage(String url) {
         Bitmap result = null;
         try {
-            FileInputStream stream = mContext.openFileInput(getFileNameByUrl(url));
+            File file = new File(mCacheDir, getFileNameByUrl(url));
+            FileInputStream stream = new FileInputStream(file);
             result = BitmapFactory.decodeStream(stream);
             stream.close();
         } catch (Exception e) {
-            Log.e(TAG, "Exception thrown while download image.");
+            Log.e(TAG, "Exception thrown while get image.");
         }
         return result;
     }
 
     public boolean isFileExist(String url) {
-        File file = mContext.getFileStreamPath(getFileNameByUrl(url));
-        return file.exists();
+        File file = new File(mCacheDir, getFileNameByUrl(url));
+        return file.isFile();
     }
 
     public boolean deleteFile(String url) {
-        File file = mContext.getFileStreamPath(getFileNameByUrl(url));
+        File file = new File(mCacheDir, getFileNameByUrl(url));
         return file.delete();
     }
 }
