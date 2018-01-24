@@ -89,7 +89,7 @@ public class NovelsFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 boolean isAdded = NovelsRepository.addFavorite(context, novel);
                                 if (isAdded) {
-                                    Toast.makeText(context, "Novel add to favorites !", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, "Novel add to favorites !", Toast.LENGTH_SHORT).show();
                                 }
                                 dialog.cancel();
                             }

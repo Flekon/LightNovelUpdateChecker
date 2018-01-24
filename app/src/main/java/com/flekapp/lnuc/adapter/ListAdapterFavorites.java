@@ -3,14 +3,18 @@ package com.flekapp.lnuc.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.flekapp.lnuc.R;
 import com.flekapp.lnuc.data.entity.Novel;
+import com.flekapp.lnuc.service.Refresher;
 import com.flekapp.lnuc.util.ImageManager;
 import com.flekapp.lnuc.util.SettingsManager;
 
@@ -61,7 +65,7 @@ public class ListAdapterFavorites extends BaseAdapter {
             view = mLayoutInflater.inflate(R.layout.list_item_favorites, parent, false);
         }
 
-        Novel novel = getFavorite(position);
+        final Novel novel = getFavorite(position);
 
         String imageUrl = novel.getImageUrl();
         Bitmap image = imageManager.getImage(imageUrl);
@@ -76,12 +80,30 @@ public class ListAdapterFavorites extends BaseAdapter {
                 .setText(novel.getShortName());
         ((TextView) view.findViewById(R.id.list_item_novel_name))
                 .setText(novel.getName());
-        ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_number))
-                .setText(novel.getLastChapterNumber());
-        ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_title))
-                .setText(novel.getLastChapterTitle());
-        ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_release))
-                .setText(mDateFormat.format(novel.getLastUpdate()));
+        if (novel.getLastUpdate() == null) {
+            ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_number))
+                    .setText("");
+            ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_title))
+                    .setText("No chapters...");
+            ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_release))
+                    .setText("");
+        } else {
+            ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_number))
+                    .setText(novel.getLastChapterNumber());
+            ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_title))
+                    .setText(novel.getLastChapterTitle());
+            ((TextView) view.findViewById(R.id.list_item_novel_last_chapter_release))
+                    .setText(mDateFormat.format(novel.getLastUpdate()));
+        }
+
+        final ImageView moreView = view.findViewById(R.id.list_item_novel_button_more);
+        moreView.setImageResource(R.drawable.ic_more_vert_black_24dp);
+        moreView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showFavoritesPopupMenu(view, novel);
+            }
+        });
 
         // TODO make it normal...
         String currentTheme = SettingsManager.getSettings().getApplicationTheme();
@@ -116,5 +138,26 @@ public class ListAdapterFavorites extends BaseAdapter {
 
     public void setNovels(List<Novel> novels) {
         mNovels = novels;
+    }
+
+    private void showFavoritesPopupMenu(View view, final Novel novel) {
+        PopupMenu menu = new PopupMenu(mContext, view);
+        menu.inflate(R.menu.menu_popup_favorites);
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_popup_favorites_refresh:
+                        new Refresher(mContext).startRefreshFavorite(novel);
+                        return true;
+                    case R.id.menu_popup_favorites_remove:
+                        Toast.makeText(mContext, "Remove " + novel.getName(), Toast.LENGTH_SHORT).show();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        menu.show();
     }
 }

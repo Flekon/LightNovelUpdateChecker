@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 import com.flekapp.lnuc.fragment.PreferenceSettingsFragment;
 import com.flekapp.lnuc.service.RefreshService;
@@ -19,6 +21,20 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 .replace(R.id.settings_preference_container, new PreferenceSettingsFragment())
                 .commit();
         SettingsManager.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        findViewById(R.id.button_reset_images).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "reset images caches", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        findViewById(R.id.button_reset_all_data).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "reset all data", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -30,13 +46,11 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
                 settings.refreshApplicationTheme();
                 break;
             case SettingsManager.PREFERENCES_BACKGROUND_TASK_ENABLE:
-                // TODO refresh background service
                 settings.refreshBackgroundTaskEnable();
                 Intent refreshService = new Intent(this, RefreshService.class);
                 startService(refreshService);
                 break;
             case SettingsManager.PREFERENCES_BACKGROUND_TASK_REFRESH_INTERVAL:
-                // TODO refresh background service
                 settings.refreshBackgroundRefreshInterval();
                 refreshService = new Intent(this, RefreshService.class);
                 startService(refreshService);
@@ -63,11 +77,4 @@ public class SettingsActivity extends ThemedActivity implements SharedPreference
 
         return super.onOptionsItemSelected(item);
     }
-
-    // TODO remove block
-    /*@Override
-    public void onBackPressed() {
-        setResult(RESULT_OK);
-        finish();
-    }*/
 }

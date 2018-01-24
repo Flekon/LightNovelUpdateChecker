@@ -59,9 +59,11 @@ public class LnmtlNovelSource implements NovelSource {
 
                 if (medias.size() > 0) {
                     for (Element media : medias) {
-                        Element image = media.getElementsByClass("media-left").get(0).getElementsByTag("img").get(0);
+                        Element image = media.getElementsByClass("media-left").get(0)
+                                .getElementsByTag("img").get(0);
                         String imageUrl = image.absUrl("src");
-                        Element link = media.getElementsByClass("media-title").get(0).getElementsByTag("a").get(0);
+                        Element link = media.getElementsByClass("media-title").get(0)
+                                .getElementsByTag("a").get(0);
                         String name = link.text().trim();
                         String novelUrl = link.absUrl("href");
 
@@ -112,36 +114,52 @@ public class LnmtlNovelSource implements NovelSource {
                     .get();
             Elements chapters = doc.select("table tr");
 
-            Iterator<Element> it = chapters.iterator();
-            int count = LAST_CHAPTERS_COUNT;
-            while (it.hasNext() && count > 0) {
-                Element cur = it.next();
-                Element link = cur.getElementsByClass("chapter-link").get(0);
-                String date = cur.getElementsByClass("label-default").get(0).text();
-                String number = link.getElementsByClass("chapter-badge").text();
-                String caption = link.text().replace(number, "").trim();
-                String status = "";
-                String url = link.absUrl("href");
+            Boolean isNotCompleted = true;
 
-                Chapter chapter = new Chapter();
-                chapter.setNovel(novel);
-                chapter.setNumber(number);
-                chapter.setTitle(caption);
-                chapter.setUrl(url);
-                chapter.setStatus(status);
-                try {
-                    chapter.setReleaseDate(DATE_FORMAT.parse(date));
-                } catch (ParseException e) {
-                    chapter.setReleaseDate(new Date());
+            Elements infoItems = doc.select(".panel-body dl");
+            for (Element element : infoItems) {
+                String name = element.select("dt").text();
+                if (name != null && "Current status".equals(name.trim())) {
+                    String status = element.select("dd").text();
+                    if (status != null && "Completed".equals(status.trim())) {
+                        isNotCompleted = false;
+                        break;
+                    }
                 }
+            }
 
-                newChapters.add(chapter);
+            if (isNotCompleted) {
+                Iterator<Element> it = chapters.iterator();
+                int count = LAST_CHAPTERS_COUNT;
+                while (it.hasNext() && count > 0) {
+                    Element cur = it.next();
+                    Element link = cur.getElementsByClass("chapter-link").get(0);
+                    String date = cur.getElementsByClass("label-default").get(0).text();
+                    String number = link.getElementsByClass("chapter-badge").text();
+                    String caption = link.text().replace(number, "").trim();
+                    String status = "";
+                    String url = link.absUrl("href");
 
-                count--;
+                    Chapter chapter = new Chapter();
+                    chapter.setNovel(novel);
+                    chapter.setNumber(number);
+                    chapter.setTitle(caption);
+                    chapter.setUrl(url);
+                    chapter.setStatus(status);
+                    try {
+                        chapter.setReleaseDate(DATE_FORMAT.parse(date));
+                    } catch (ParseException e) {
+                        chapter.setReleaseDate(new Date());
+                    }
+
+                    newChapters.add(chapter);
+
+                    count--;
+                }
             }
 
             return newChapters;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Exception thrown while load last chapters !", e);
         }
 

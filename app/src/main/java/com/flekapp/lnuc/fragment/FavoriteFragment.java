@@ -78,7 +78,7 @@ public class FavoriteFragment extends Fragment {
                                 boolean isRemoved = NovelsRepository.deleteFavorite(context, novel);
                                 if (isRemoved) {
                                     refreshFragmentContent();
-                                    Toast.makeText(context, "Novel removed from favorites !", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, "Novel removed from favorites !", Toast.LENGTH_SHORT).show();
                                 }
                                 dialog.cancel();
                             }

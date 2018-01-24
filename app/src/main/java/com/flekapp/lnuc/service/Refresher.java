@@ -124,6 +124,84 @@ public class Refresher {
         });
     }
 
+    public void startRefreshFavorite(final Novel novel) {
+        final int notificationId = ++sNotificationId;
+
+        SettingsManager.Settings settings = SettingsManager.getSettings();
+        int def = new Notification().defaults;
+        if (settings.isNotificationVibrateEnable())
+            def |= Notification.DEFAULT_VIBRATE;
+        if (settings.isNotificationLightsEnable())
+            def |= Notification.DEFAULT_LIGHTS;
+        if (settings.isNotificationSoundEnable())
+            def |= Notification.DEFAULT_SOUND;
+        final int defaults = def;
+
+        // TODO make normal notification
+        final Notification n = new NotificationCompat.Builder(mContext)
+                .setSmallIcon(R.drawable.ic_launcher_background)
+                .setContentTitle(mContext.getResources().getString(R.string.app_name))
+                .setContentText("Check new novel chapters...")
+                .setProgress(0, 0, true)
+                .build();
+        mNotificationManager.notify(notificationId, n);
+
+        refreshNovel(novel, new Refresher.onFavoritesRefreshed() {
+            @Override
+            public void onRefresh(final List<Chapter> newChapters) {
+                SettingsManager.setValue(SettingsManager.VALUES_LAST_UPDATE_DATE, new Date());
+                int newChaptersCount = newChapters.size();
+                if (newChaptersCount > 0) {
+                    if (newChaptersCount < 4) {
+                        int nId = notificationId;
+                        for (Chapter chapter : newChapters) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(chapter.getUrl()));
+                            PendingIntent pIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
+
+                            String text = String.format("(%s) [%s] %s",
+                                    chapter.getNovel().getShortName(), chapter.getNumber(), chapter.getTitle());
+
+                            final Notification n = new NotificationCompat.Builder(mContext)
+                                    .setSmallIcon(R.drawable.ic_launcher_background)
+                                    .setContentTitle(mContext.getResources().getString(R.string.notification_new_chapter))
+                                    .setContentText(text)
+                                    .setContentIntent(pIntent)
+                                    .setAutoCancel(true)
+                                    .setDefaults(defaults)
+                                    .build();
+
+                            mNotificationManager.notify(nId, n);
+                            nId = ++sNotificationId;
+                        }
+                    } else {
+                        Collections.reverse(newChapters);
+
+                        String text = "New chapters count is " + newChaptersCount;
+                        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+                        inboxStyle.setBigContentTitle("List of released chapters:");
+                        for (Chapter chapter : newChapters) {
+                            inboxStyle.addLine(String.format("(%s) [%s] %s",
+                                    chapter.getNovel().getShortName(), chapter.getNumber(), chapter.getTitle()));
+                        }
+
+                        final Notification n = new NotificationCompat.Builder(mContext)
+                                .setNumber(newChaptersCount)
+                                .setSmallIcon(R.drawable.ic_launcher_background)
+                                .setContentTitle(text)
+                                .setContentText("...")
+                                .setStyle(inboxStyle)
+                                .setAutoCancel(true)
+                                .setDefaults(defaults)
+                                .build();
+                        mNotificationManager.notify(notificationId, n);
+                    }
+                } else {
+                    mNotificationManager.cancel(notificationId);
+                }
+            }
+        });
+    }
+
     private void refreshFavorites(@NonNull final onFavoritesRefreshed listener) {
         new Thread(new Runnable() {
             @Override
@@ -149,6 +227,36 @@ public class Refresher {
 
                         newChapters.addAll(newNovelChapters);
                     }
+                }
+                mBackgroundWorking = false;
+
+                listener.onRefresh(newChapters);
+            }
+        }).start();
+    }
+
+    public void refreshNovel(@NonNull final Novel novel, @NonNull final onFavoritesRefreshed listener) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mBackgroundWorking = true;
+                List<Chapter> newChapters = new ArrayList<>();
+                NovelSource source = NovelSourceFactory.getSource(novel.getSource());
+                if (source != null) {
+                    List<Chapter> chapters = source.getLastChapters(novel);
+                    Collections.reverse(chapters);
+
+                    List<Chapter> newNovelChapters = new ArrayList<>();
+                    for (Chapter chapter : chapters) {
+                        if (novel.getLastUpdate() == null ||
+                                novel.getLastUpdate().before(chapter.getReleaseDate())) {
+                            if (NovelsRepository.addChapter(mContext, chapter)) {
+                                newNovelChapters.add(chapter);
+                            }
+                        }
+                    }
+
+                    newChapters.addAll(newNovelChapters);
                 }
                 mBackgroundWorking = false;
 

@@ -24,24 +24,6 @@ public class NovelsRepository {
         NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        /*String query = "SELECT * FROM " + FavoriteNovels.TABLE_NAME + " fn LEFT JOIN" +
-                            " (SELECT " + ReleasedChapter.COLUMN_NOVEL_ID + ", MAX(" + ReleasedChapter.COLUMN_NUMBER + ") lastChapter, MAX(" + ReleasedChapter.COLUMN_RELEASE_AT + ") lastReleaseAt" +
-                            " FROM " + ReleasedChapter.TABLE_NAME + " group by " + ReleasedChapter.COLUMN_NOVEL_ID + ") c ON c."+ ReleasedChapter.COLUMN_NOVEL_ID + " = fn." + FavoriteNovels.COLUMN_ID + ";";*/
-        /*
-        SELECT *
-        FROM favorite_novels fn
-            LEFT JOIN (
-              SELECT a.NOVEL_ID, NUMBER lastChapterNumber, TITLE lastChapterTitle, RELEASE_AT lastReleaseAt
-                FROM chapters A
-                INNER JOIN (
-                  SELECT _id, NOVEL_ID
-                    FROM chapters
-                    GROUP BY NOVEL_ID
-                    HAVING RELEASE_AT = MAX(RELEASE_AT)
-                ) B ON A._id = B._id AND A.NOVEL_ID = B.NOVEL_ID
-            ) c ON c.NOVEL_ID = fn._id;
-         */
-
         String query = "SELECT * FROM " + FavoriteNovels.TABLE_NAME + " fn " +
                         "LEFT JOIN (" +
                             "SELECT a." + ReleasedChapter.COLUMN_NOVEL_ID + ", " +
@@ -74,8 +56,11 @@ public class NovelsRepository {
                     .getColumnIndex("lastChapterNumber"));
             String lastChapterTitle = cursor.getString(cursor
                     .getColumnIndex("lastChapterTitle"));
-            Long lastChapterReleaseAt = cursor.getLong(cursor
-                    .getColumnIndex("lastReleaseAt"));
+            Long lastChapterReleaseAt = null;
+            if (!cursor.isNull(cursor.getColumnIndex("lastReleaseAt"))) {
+                lastChapterReleaseAt = cursor.getLong(cursor
+                        .getColumnIndex("lastReleaseAt"));
+            }
 
             Novel novel = new Novel();
             novel.setId(id);
@@ -86,9 +71,12 @@ public class NovelsRepository {
             novel.setSource(Source.getByName(source));
             novel.setLastChapterNumber(lastChapterNumber);
             novel.setLastChapterTitle(lastChapterTitle);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(lastChapterReleaseAt);
-            novel.setLastUpdate(calendar.getTime());
+            // TODO check if date not null...
+            if (lastChapterReleaseAt != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(lastChapterReleaseAt);
+                novel.setLastUpdate(calendar.getTime());
+            }
             novels.put(id, novel);
         }
         cursor.close();

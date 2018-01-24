@@ -93,16 +93,4 @@ public class MainActivity extends ThemedActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    // TODO remove block
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case REQUEST_CODE_SETTINGS:
-                SettingsManager.initSettings(getDefaultSharedPreferences(getApplicationContext()));
-                Intent refreshService = new Intent(this, RefreshService.class);
-                startService(refreshService);
-                break;
-        }
-    }*/
 }
