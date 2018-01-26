@@ -126,9 +126,9 @@ public class NovelsFragment extends Fragment {
                 return false;
             }
         });
-        new Refresher(getActivity().getApplicationContext()).refreshNovels(Source.LNMTL, new Refresher.onNovelsRefreshed() {
+        new Refresher(getActivity().getApplicationContext()).refreshNovels(Source.LNMTL, new Refresher.NovelsRefreshListener() {
             @Override
-            public void onRefresh(List<Novel> novels) {
+            public void onRefreshed(List<Novel> novels) {
                 for (Novel novel : novels) {
                     mList.add(String.format("(%s) %s",
                             novel.getShortName(), novel.getName()));

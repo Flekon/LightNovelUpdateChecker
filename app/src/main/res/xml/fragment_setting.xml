@@ -44,4 +44,7 @@
             android:summary="@string/settings_notification_sound_sum"
             android:defaultValue="true" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Other">
+
+    </PreferenceCategory>
 </PreferenceScreen>

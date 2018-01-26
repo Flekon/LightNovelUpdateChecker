@@ -1,17 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal" >
+
+        <RelativeLayout
+            android:id="@+id/list_item_favorites_refresh_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/backgroundRefreshRow">
+
+            <ImageView
+                android:id="@+id/refresh_icon"
+                android:layout_width="@dimen/ic_delete"
+                android:layout_height="@dimen/ic_delete"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/padd_10"
+                android:src="@drawable/ic_refresh_white_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/padd_10"
+                android:layout_toEndOf="@id/refresh_icon"
+                android:text="Refresh"
+                android:textColor="#fff"
+                android:textSize="13sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/list_item_favorites_delete_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/backgroundDeleteRow">
+
+            <ImageView
+                android:id="@+id/delete_icon"
+                android:layout_width="@dimen/ic_delete"
+                android:layout_height="@dimen/ic_delete"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padd_10"
+                android:src="@drawable/ic_delete_white_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/padd_10"
+                android:layout_toStartOf="@id/delete_icon"
+                android:text="Delete"
+                android:textColor="#fff"
+                android:textSize="13sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/list_item_favorites_foreground_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?android:windowBackground"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/last_update_list_item_padding_top"
+        android:paddingBottom="@dimen/last_update_list_item_padding_bottom"
         android:paddingEnd="@dimen/last_update_list_item_padding_side"
         android:paddingStart="@dimen/last_update_list_item_padding_side"
-        android:paddingBottom="@dimen/last_update_list_item_padding_bottom" >
+        android:paddingTop="@dimen/last_update_list_item_padding_top">
 
         <ImageView
             android:id="@+id/list_item_novel_image"
@@ -21,17 +85,17 @@
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_launcher" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
-                android:layout_weight="1"
-                android:orientation="vertical" >
+                android:layout_toStartOf="@id/list_item_novel_button_more"
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -89,17 +153,20 @@
                         android:paddingStart="@dimen/list_item_padding_start"
                         android:text="@string/list_item_novel_last_chapter_title"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="?android:textColorPrimary"
                         android:textSize="16sp" />
                 </LinearLayout>
             </LinearLayout>
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/list_item_novel_button_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
                 android:layout_gravity="end"
+                android:background="@android:color/transparent"
                 app:srcCompat="@drawable/ic_more_vert_black_24dp" />
 
-        </LinearLayout>
+        </RelativeLayout>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

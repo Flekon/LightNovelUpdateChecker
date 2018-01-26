@@ -107,7 +107,7 @@ public class NovelsRepository {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         String[] params = new String[] { String.valueOf(novel.getId()) };
 
-        new ImageManager(context).deleteFile(novel.getImageUrl());
+        new ImageManager(context).deleteImage(novel.getImageUrl());
 
         return db.delete(FavoriteNovels.TABLE_NAME,FavoriteNovels.COLUMN_ID + " = ?", params) > 0;
     }

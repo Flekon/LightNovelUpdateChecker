@@ -7,6 +7,9 @@
     <color name="colorSplashBackground">#FF303030</color>
     <color name="colorTeal500">#FF009688</color>
 
+    <color name="backgroundDeleteRow">#fa315b</color>
+    <color name="backgroundRefreshRow">@android:color/holo_green_light</color>
+
     <color name="textColorPrimaryDark">@android:color/primary_text_dark</color>
     <color name="textColorPrimaryLight">@android:color/primary_text_light</color>
     <color name="textColorSecondaryDark">@android:color/secondary_text_dark</color>

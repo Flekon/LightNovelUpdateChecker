@@ -22,11 +22,11 @@ public class ImageManager {
     private static final String TAG = ImageManager.class.getSimpleName();
 
     static class DownloadImage extends AsyncTask<String, Void, Bitmap> {
-        private File mCacheDir;
+        private File mImagesDir;
         String resultFileName;
 
         DownloadImage(File cacheDir, String fileName) {
-            mCacheDir = cacheDir;
+            mImagesDir = cacheDir;
             resultFileName = fileName;
         }
 
@@ -53,7 +53,7 @@ public class ImageManager {
 
         private void saveImage(Bitmap b, String imageName) {
             try {
-                File file = new File(mCacheDir, imageName);
+                File file = new File(mImagesDir, imageName);
                 FileOutputStream stream = new FileOutputStream(file);
                 b.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 stream.close();
@@ -63,21 +63,21 @@ public class ImageManager {
         }
     }
 
-    private File mCacheDir;
+    private File mImagesDir;
 
     public ImageManager(Context context) {
         String sdState = getExternalStorageState();
         if (MEDIA_MOUNTED.equals(sdState)) {
-            mCacheDir = context.getExternalFilesDir("images");
-            if (mCacheDir == null) {
-                mCacheDir = context.getCacheDir();
+            mImagesDir = context.getExternalFilesDir("images");
+            if (mImagesDir == null) {
+                mImagesDir = context.getCacheDir();
             }
         } else {
-            mCacheDir = context.getCacheDir();
+            mImagesDir = context.getCacheDir();
         }
-        if(!mCacheDir.exists()) {
-            if (!mCacheDir.mkdirs()) {
-                Log.e(TAG, "Can't create cache directory for context.");
+        if(!mImagesDir.exists()) {
+            if (!mImagesDir.mkdirs()) {
+                Log.e(TAG, "Can't create images directory.");
             }
         }
     }
@@ -99,13 +99,13 @@ public class ImageManager {
     }
 
     public void saveImage(String url) {
-        new DownloadImage(mCacheDir, getFileNameByUrl(url)).execute(url);
+        new DownloadImage(mImagesDir, getFileNameByUrl(url)).execute(url);
     }
 
     public Bitmap getImage(String url) {
         Bitmap result = null;
         try {
-            File file = new File(mCacheDir, getFileNameByUrl(url));
+            File file = new File(mImagesDir, getFileNameByUrl(url));
             FileInputStream stream = new FileInputStream(file);
             result = BitmapFactory.decodeStream(stream);
             stream.close();
@@ -115,13 +115,13 @@ public class ImageManager {
         return result;
     }
 
-    public boolean isFileExist(String url) {
-        File file = new File(mCacheDir, getFileNameByUrl(url));
+    public boolean isImageExist(String url) {
+        File file = new File(mImagesDir, getFileNameByUrl(url));
         return file.isFile();
     }
 
-    public boolean deleteFile(String url) {
-        File file = new File(mCacheDir, getFileNameByUrl(url));
+    public boolean deleteImage(String url) {
+        File file = new File(mImagesDir, getFileNameByUrl(url));
         return file.delete();
     }
 }

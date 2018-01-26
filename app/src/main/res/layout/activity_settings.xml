@@ -18,21 +18,91 @@
                 android:id="@+id/settings_preference_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >
+
             </FrameLayout>
 
-            <Button
-                android:id="@+id/button_reset_images"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reset images cache"
-                android:layout_gravity="center" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="@dimen/last_update_list_item_double_padding_side"
+                android:paddingEnd="@dimen/last_update_list_item_double_padding_side"
+                android:orientation="vertical" >
 
-            <Button
-                android:id="@+id/button_reset_all_data"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Reset all data"
-                android:layout_gravity="center" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/last_update_list_item_padding_bottom"
+                    android:paddingTop="@dimen/last_update_list_item_padding_top">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Refresh images cache"
+                            android:textAlignment="viewStart"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Description of item...."
+                            android:textAlignment="viewStart"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/button_reset_images"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Refresh" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/last_update_list_item_padding_bottom"
+                    android:paddingTop="@dimen/last_update_list_item_padding_top">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Reset all user data"
+                            android:textAlignment="viewStart"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Description of item...."
+                            android:textAlignment="viewStart"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/button_reset_all_data"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/holo_red_dark"
+                        android:text="Reset" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

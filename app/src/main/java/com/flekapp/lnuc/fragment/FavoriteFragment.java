@@ -1,43 +1,48 @@
 package com.flekapp.lnuc.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.Toast;
 
 import com.flekapp.lnuc.R;
-import com.flekapp.lnuc.adapter.ListAdapterFavorites;
+import com.flekapp.lnuc.adapter.FavoritesItemTouchHelper;
+import com.flekapp.lnuc.adapter.RecyclerAdapterFavorites;
 import com.flekapp.lnuc.data.NovelsRepository;
 import com.flekapp.lnuc.data.entity.Novel;
+import com.flekapp.lnuc.service.Refresher;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FavoriteFragment extends Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
+    private View mEmptyView;
 
-    private ListAdapterFavorites mAdapter;
+    private Context mContext;
+    private List<Novel> mNovels;
+    private RecyclerAdapterFavorites mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getActivity().setTitle(getResources().getString(R.string.menu_navigation_favorites));
         View view = inflater.inflate(R.layout.fragment_favorite, container, false);
 
+        mContext = getActivity().getApplicationContext();
+
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_layout_list_favorites);
-        mListView = view.findViewById(R.id.list_favorites);
-        mListView.setEmptyView(view.findViewById(R.id.list_favorites_empty_text));
+        mRecyclerView = view.findViewById(R.id.recycler_view_favorites);
+        mEmptyView = view.findViewById(R.id.list_favorites_empty_text);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -46,52 +51,34 @@ public class FavoriteFragment extends Fragment {
             }
         });
 
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(mAdapter.getFavorite(position).getUrl()));
-                startActivity(intent);
-            }
-        });
-        final Context context = getActivity().getApplicationContext();
-        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        FavoritesItemTouchHelper itemTouchHelperCallback =
+                new FavoritesItemTouchHelper(new FavoritesItemTouchHelper.SwipeListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, final int position, long id) {
-                final Novel novel = mAdapter.getFavorite(position);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(String.format("Remove \"%s\" from favorites ?", novel.getName()));
-                builder.setCancelable(true);
-
-                builder.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                builder.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                boolean isRemoved = NovelsRepository.deleteFavorite(context, novel);
-                                if (isRemoved) {
-                                    refreshFragmentContent();
-                                    Toast.makeText(context, "Novel removed from favorites !", Toast.LENGTH_SHORT).show();
-                                }
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                return true;
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, FavoritesItemTouchHelper.SwipeDirection direction, int position) {
+                switch (direction) {
+                    case LEFT:
+                        NovelsRepository.deleteFavorite(mContext,
+                                mNovels.get(position));
+                        mNovels.remove(mNovels.get(position));
+                        mAdapter.notifyItemRemoved(position);
+                        break;
+                    case RIGHT:
+                        new Refresher(mContext).startRefreshFavorite(mNovels.get(position));
+                        mAdapter.notifyItemChanged(position);
+                        break;
+                }
             }
         });
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
 
-        mAdapter = new ListAdapterFavorites(getActivity().getApplicationContext(), new ArrayList<Novel>());
+        mNovels = new ArrayList<>();
+        mAdapter = new RecyclerAdapterFavorites(mContext, mNovels);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(mContext, LinearLayoutManager.VERTICAL));
+        mRecyclerView.setAdapter(mAdapter);
 
         return view;
     }
@@ -104,9 +91,22 @@ public class FavoriteFragment extends Fragment {
 
     private void refreshFragmentContent() {
         List<Novel> favorites = new ArrayList<>(NovelsRepository
-                .getFavoritesFromDB(getActivity().getApplicationContext()).values());
-        mAdapter.setNovels(favorites);
-        mListView.setAdapter(mAdapter);
+                .getFavoritesFromDB(mContext).values());
+        mNovels.clear();
+        mNovels.addAll(favorites);
+
+        mAdapter.notifyDataSetChanged();
+        checkIsViewEmpty();
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private void checkIsViewEmpty() {
+        if (mAdapter.getItemCount() > 0) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
     }
 }

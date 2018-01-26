@@ -25,17 +25,17 @@
     <string name="settings_application_theme">Theme</string>
 
     <string name="settings_background_task_title">Background service</string>
-    <string name="settings_background_task_enable">Enable service</string>
+    <string name="settings_background_task_enable">Enable refresher</string>
     <string name="settings_background_task_enable_sum">Refresh favorites novels in background</string>
     <string name="settings_background_task_interval">Refresh interval</string>
 
     <string name="settings_notification_title">Notification</string>
     <string name="settings_notification_vibrate">Enable vibration</string>
-    <string name="settings_notification_vibrate_sum">Description . . .</string>
+    <string name="settings_notification_vibrate_sum">Vibration on notification</string>
     <string name="settings_notification_lights">Enable lights indicator</string>
-    <string name="settings_notification_lights_sum">Description . . .</string>
+    <string name="settings_notification_lights_sum">Light signals on notification</string>
     <string name="settings_notification_sound">Enable sound</string>
-    <string name="settings_notification_sound_sum">Description . . .</string>
+    <string name="settings_notification_sound_sum">Sound on notification</string>
 
     <!-- Arrays values -->
     <string name="last_update_filters_all">All chapters</string>
