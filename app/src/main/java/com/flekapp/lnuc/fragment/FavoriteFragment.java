@@ -1,6 +1,10 @@
 package com.flekapp.lnuc.fragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,8 +15,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.flekapp.lnuc.R;
 import com.flekapp.lnuc.adapter.FavoritesItemTouchHelper;
@@ -52,15 +59,12 @@ public class FavoriteFragment extends Fragment {
         });
 
         FavoritesItemTouchHelper itemTouchHelperCallback =
-                new FavoritesItemTouchHelper(new FavoritesItemTouchHelper.SwipeListener() {
+                new FavoritesItemTouchHelper(new FavoritesItemTouchHelper.OnSwipeListener() {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, FavoritesItemTouchHelper.SwipeDirection direction, int position) {
                 switch (direction) {
                     case LEFT:
-                        NovelsRepository.deleteFavorite(mContext,
-                                mNovels.get(position));
-                        mNovels.remove(mNovels.get(position));
-                        mAdapter.notifyItemRemoved(position);
+                        showRemoveNovelDialog(position);
                         break;
                     case RIGHT:
                         new Refresher(mContext).startRefreshFavorite(mNovels.get(position));
@@ -73,6 +77,12 @@ public class FavoriteFragment extends Fragment {
 
         mNovels = new ArrayList<>();
         mAdapter = new RecyclerAdapterFavorites(mContext, mNovels);
+        mAdapter.setOnMoreButtonClickListener(new RecyclerAdapterFavorites.OnMoreButtonClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                showFavoritesPopupMenu(view, position);
+            }
+        });
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(mContext);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -108,5 +118,64 @@ public class FavoriteFragment extends Fragment {
             mRecyclerView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void showFavoritesPopupMenu(View view, final int position) {
+        final Novel novel = mNovels.get(position);
+        PopupMenu menu = new PopupMenu(mContext, view);
+        menu.inflate(R.menu.menu_popup_favorites);
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.menu_popup_favorites_refresh:
+                        new Refresher(mContext).startRefreshFavorite(novel);
+                        return true;
+                    case R.id.menu_popup_favorites_recache:
+                        Toast.makeText(mContext, "Recache", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.menu_popup_favorites_open_url:
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(novel.getUrl()));
+                        startActivity(intent);
+                        return true;
+                    case R.id.menu_popup_favorites_remove:
+                        showRemoveNovelDialog(position);
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
+        menu.show();
+    }
+
+    private void showRemoveNovelDialog(final int position) {
+        final Novel novel = mNovels.get(position);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage(String.format("Remove from favorites ?\n[ %s ]", novel.getName()));
+        builder.setCancelable(true);
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        mAdapter.notifyItemChanged(position);
+                        dialog.cancel();
+                    }
+                });
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        boolean isRemoved = NovelsRepository.deleteFavorite(mContext, novel);
+                        if (isRemoved) {
+                            NovelsRepository.deleteFavorite(mContext, mNovels.get(position));
+                            mNovels.remove(mNovels.get(position));
+                            mAdapter.notifyItemRemoved(position);
+                        }
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

@@ -6,6 +6,14 @@
         android:title="@string/menu_popup_favorites_refresh" />
 
     <item
+        android:id="@+id/menu_popup_favorites_recache"
+        android:title="@string/menu_popup_favorites_recache" />
+
+    <item
+        android:id="@+id/menu_popup_favorites_open_url"
+        android:title="@string/menu_popup_favorites_open_url" />
+
+    <item
         android:id="@+id/menu_popup_favorites_remove"
         android:title="@string/menu_popup_favorites_remove" />
 

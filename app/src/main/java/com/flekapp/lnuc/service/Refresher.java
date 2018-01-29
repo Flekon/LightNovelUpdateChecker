@@ -26,12 +26,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Refresher {
-    public interface ChaptersRefreshListener {
+    public interface OnChaptersRefreshListener {
         void onStartRefreshNovel(Novel novel);
         void onRefreshed(List<Chapter> newChapters);
     }
 
-    public interface NovelsRefreshListener {
+    public interface OnNovelsRefreshListener {
         void onRefreshed(List<Novel> novels);
     }
 
@@ -64,7 +64,7 @@ public class Refresher {
             novels.add(novel);
         }
 
-        refreshFavorites(novels, new ChaptersRefreshListener() {
+        refreshFavorites(novels, new OnChaptersRefreshListener() {
             @Override
             public void onStartRefreshNovel(Novel novel) {
                 Bitmap largeIcon = new ImageManager(mContext).getImage(novel.getImageUrl());
@@ -124,7 +124,7 @@ public class Refresher {
         });
     }
 
-    private void refreshFavorites(@NonNull final List<Novel> novels, @NonNull final ChaptersRefreshListener listener) {
+    private void refreshFavorites(@NonNull final List<Novel> novels, @NonNull final OnChaptersRefreshListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -157,7 +157,7 @@ public class Refresher {
         }).start();
     }
 
-    public void refreshNovels(@NonNull final Source source, @NonNull final NovelsRefreshListener listener) {
+    public void refreshNovels(@NonNull final Source source, @NonNull final OnNovelsRefreshListener listener) {
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -14,8 +14,10 @@
     <string name="menu_main_settings">Settings</string>
     <string name="menu_main_exit">Exit</string>
 
-    <string name="menu_popup_favorites_refresh">Refresh</string>
-    <string name="menu_popup_favorites_remove">Remove</string>
+    <string name="menu_popup_favorites_refresh">Refresh last chapters</string>
+    <string name="menu_popup_favorites_recache">Recache last chapters</string>
+    <string name="menu_popup_favorites_open_url">Open url in browser</string>
+    <string name="menu_popup_favorites_remove">Remove from favorites</string>
 
     <!-- Notification values -->
     <string name="notification_new_chapter">New chapter released !</string>

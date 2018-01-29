@@ -10,11 +10,11 @@ import static android.support.v7.widget.helper.ItemTouchHelper.LEFT;
 import static android.support.v7.widget.helper.ItemTouchHelper.RIGHT;
 
 public class FavoritesItemTouchHelper extends ItemTouchHelper.SimpleCallback {
-    private SwipeListener swipeListener;
+    private OnSwipeListener onSwipeListener;
 
-    public FavoritesItemTouchHelper(@NonNull SwipeListener listener) {
+    public FavoritesItemTouchHelper(@NonNull OnSwipeListener listener) {
         super(0, LEFT | RIGHT);
-        swipeListener = listener;
+        onSwipeListener = listener;
     }
 
     @Override
@@ -26,10 +26,10 @@ public class FavoritesItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         switch (direction) {
             case RIGHT:
-                swipeListener.onSwiped(viewHolder, SwipeDirection.RIGHT, viewHolder.getAdapterPosition());
+                onSwipeListener.onSwiped(viewHolder, SwipeDirection.RIGHT, viewHolder.getAdapterPosition());
                 break;
             case LEFT:
-                swipeListener.onSwiped(viewHolder, SwipeDirection.LEFT, viewHolder.getAdapterPosition());
+                onSwipeListener.onSwiped(viewHolder, SwipeDirection.LEFT, viewHolder.getAdapterPosition());
                 break;
         }
     }
@@ -73,7 +73,7 @@ public class FavoritesItemTouchHelper extends ItemTouchHelper.SimpleCallback {
         LEFT, RIGHT
     }
 
-    public interface SwipeListener {
+    public interface OnSwipeListener {
         void onSwiped(RecyclerView.ViewHolder viewHolder, SwipeDirection direction, int position);
     }
 }
