@@ -25,7 +25,7 @@ public class RecyclerAdapterFavorites extends RecyclerView.Adapter<RecyclerAdapt
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         ImageView novelImage;
-        TextView shortName, name, chapterNumber, chapterTitle, chapterRelease;
+        TextView shortName, name, chapterNumber, chapterTitle, chapterPublished;
         ImageButton moreImageButton;
 
         View viewForeground, viewRightSwipe, viewLeftSwipe;
@@ -37,7 +37,7 @@ public class RecyclerAdapterFavorites extends RecyclerView.Adapter<RecyclerAdapt
             name = view.findViewById(R.id.list_item_novel_name);
             chapterNumber = view.findViewById(R.id.list_item_novel_last_chapter_number);
             chapterTitle = view.findViewById(R.id.list_item_novel_last_chapter_title);
-            chapterRelease = view.findViewById(R.id.list_item_novel_last_chapter_release);
+            chapterPublished = view.findViewById(R.id.list_item_novel_last_chapter_published);
             moreImageButton = view.findViewById(R.id.list_item_novel_button_more);
 
             viewForeground = view.findViewById(R.id.list_item_favorites_foreground_view);
@@ -81,11 +81,11 @@ public class RecyclerAdapterFavorites extends RecyclerView.Adapter<RecyclerAdapt
         if (novel.getLastUpdate() == null) {
             holder.chapterNumber.setText("");
             holder.chapterTitle.setText("No chapters...");
-            holder.chapterRelease.setText("");
+            holder.chapterPublished.setText("");
         } else {
             holder.chapterNumber.setText(novel.getLastChapterNumber());
             holder.chapterTitle.setText(novel.getLastChapterTitle());
-            holder.chapterRelease.setText(mDateFormat.format(novel.getLastUpdate()));
+            holder.chapterPublished.setText(mDateFormat.format(novel.getLastUpdate()));
         }
 
         holder.moreImageButton.setImageResource(R.drawable.ic_more_vert_black_24dp);

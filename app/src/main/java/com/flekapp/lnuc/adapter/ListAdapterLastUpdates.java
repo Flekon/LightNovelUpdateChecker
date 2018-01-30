@@ -86,8 +86,8 @@ public class ListAdapterLastUpdates extends BaseAdapter implements Filterable {
                 .setText(chapter.getTitle());
         ((TextView) view.findViewById(R.id.list_last_update_item_chapter_novel))
                 .setText(chapter.getNovel().getName());
-        ((TextView) view.findViewById(R.id.list_last_update_item_chapter_release))
-                .setText(mDateFormat.format(chapter.getReleaseDate()));
+        ((TextView) view.findViewById(R.id.list_last_update_item_chapter_published))
+                .setText(mDateFormat.format(chapter.getPublicationDate()));
 
         // TODO make it normal...
         String currentTheme = SettingsManager.getSettings().getApplicationTheme();
@@ -100,7 +100,7 @@ public class ListAdapterLastUpdates extends BaseAdapter implements Filterable {
                         setTextColor(mContext.getResources().getColor(R.color.textColorPrimaryDark));
                 ((TextView) view.findViewById(R.id.list_last_update_item_chapter_novel)).
                         setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryDark));
-                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_release)).
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_published)).
                         setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryDark));
                 break;
             case "Light":
@@ -108,7 +108,7 @@ public class ListAdapterLastUpdates extends BaseAdapter implements Filterable {
                         setTextColor(mContext.getResources().getColor(R.color.textColorPrimaryLight));
                 ((TextView) view.findViewById(R.id.list_last_update_item_chapter_novel)).
                         setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryLight));
-                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_release)).
+                ((TextView) view.findViewById(R.id.list_last_update_item_chapter_published)).
                         setTextColor(mContext.getResources().getColor(R.color.textColorSecondaryLight));
                 break;
         }
@@ -141,7 +141,7 @@ public class ListAdapterLastUpdates extends BaseAdapter implements Filterable {
         } else {
             if (filter.equals(resources.getString(R.string.last_update_filters_today))) {
                 for (Chapter chapter : mChaptersProtected) {
-                    if (DateUtils.isToday(chapter.getReleaseDate().getTime())) {
+                    if (DateUtils.isToday(chapter.getPublicationDate().getTime())) {
                         result.add(chapter);
                     }
                 }

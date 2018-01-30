@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.flekapp.lnuc.data.NovelsContract.FavoriteNovels;
-import com.flekapp.lnuc.data.NovelsContract.ReleasedChapter;
+import com.flekapp.lnuc.data.NovelsContract.PublishedChapter;
 import com.flekapp.lnuc.data.entity.Chapter;
 import com.flekapp.lnuc.data.entity.Novel;
 import com.flekapp.lnuc.data.entity.Source;
@@ -26,18 +26,19 @@ public class NovelsRepository {
 
         String query = "SELECT * FROM " + FavoriteNovels.TABLE_NAME + " fn " +
                         "LEFT JOIN (" +
-                            "SELECT a." + ReleasedChapter.COLUMN_NOVEL_ID + ", " +
-                                        ReleasedChapter.COLUMN_NUMBER + " lastChapterNumber, " +
-                                        ReleasedChapter.COLUMN_TITLE + " lastChapterTitle, " +
-                                        ReleasedChapter.COLUMN_RELEASE_AT + " lastReleaseAt " +
-                                    "FROM " + ReleasedChapter.TABLE_NAME + " A INNER JOIN (" +
-                                            "SELECT " + ReleasedChapter.COLUMN_ID + ", " + ReleasedChapter.COLUMN_NOVEL_ID +
-                                                " FROM " + ReleasedChapter.TABLE_NAME +
-                                                " GROUP BY " + ReleasedChapter.COLUMN_NOVEL_ID + "" +
-                                                " HAVING " + ReleasedChapter.COLUMN_RELEASE_AT + " = MAX(" + ReleasedChapter.COLUMN_RELEASE_AT + ")) B" +
-                                                " ON A." + ReleasedChapter.COLUMN_ID + " = B." + ReleasedChapter.COLUMN_ID +
-                                                    " AND A." + ReleasedChapter.COLUMN_NOVEL_ID + " = B." + ReleasedChapter.COLUMN_NOVEL_ID +
-                            ") c ON c." + ReleasedChapter.COLUMN_NOVEL_ID + " = fn." + FavoriteNovels.COLUMN_ID + ";";
+                            "SELECT a." + PublishedChapter.COLUMN_NOVEL_ID + ", " +
+                                        PublishedChapter.COLUMN_NUMBER + " lastChapterNumber, " +
+                                        PublishedChapter.COLUMN_TITLE + " lastChapterTitle, " +
+                                        PublishedChapter.COLUMN_PUBLISHED_AT + " lastPublishedAt " +
+                                    "FROM " + PublishedChapter.TABLE_NAME + " A INNER JOIN (" +
+                                            "SELECT " + PublishedChapter.COLUMN_ID + ", " + PublishedChapter.COLUMN_NOVEL_ID +
+                                                " FROM " + PublishedChapter.TABLE_NAME +
+                                                " GROUP BY " + PublishedChapter.COLUMN_NOVEL_ID + "" +
+                                                " HAVING " + PublishedChapter.COLUMN_PUBLISHED_AT + " = MAX(" + PublishedChapter.COLUMN_PUBLISHED_AT + ") AND " +
+                                                        PublishedChapter.COLUMN_NUMBER + " = MAX(" + PublishedChapter.COLUMN_NUMBER + ")) B" +
+                                                " ON A." + PublishedChapter.COLUMN_ID + " = B." + PublishedChapter.COLUMN_ID +
+                                                    " AND A." + PublishedChapter.COLUMN_NOVEL_ID + " = B." + PublishedChapter.COLUMN_NOVEL_ID +
+                            ") c ON c." + PublishedChapter.COLUMN_NOVEL_ID + " = fn." + FavoriteNovels.COLUMN_ID + ";";
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor
@@ -56,10 +57,10 @@ public class NovelsRepository {
                     .getColumnIndex("lastChapterNumber"));
             String lastChapterTitle = cursor.getString(cursor
                     .getColumnIndex("lastChapterTitle"));
-            Long lastChapterReleaseAt = null;
-            if (!cursor.isNull(cursor.getColumnIndex("lastReleaseAt"))) {
-                lastChapterReleaseAt = cursor.getLong(cursor
-                        .getColumnIndex("lastReleaseAt"));
+            Long lastChapterPublishedAt = null;
+            if (!cursor.isNull(cursor.getColumnIndex("lastPublishedAt"))) {
+                lastChapterPublishedAt = cursor.getLong(cursor
+                        .getColumnIndex("lastPublishedAt"));
             }
 
             Novel novel = new Novel();
@@ -71,10 +72,9 @@ public class NovelsRepository {
             novel.setSource(Source.getByName(source));
             novel.setLastChapterNumber(lastChapterNumber);
             novel.setLastChapterTitle(lastChapterTitle);
-            // TODO check if date not null...
-            if (lastChapterReleaseAt != null) {
+            if (lastChapterPublishedAt != null) {
                 Calendar calendar = Calendar.getInstance();
-                calendar.setTimeInMillis(lastChapterReleaseAt);
+                calendar.setTimeInMillis(lastChapterPublishedAt);
                 novel.setLastUpdate(calendar.getTime());
             }
             novels.put(id, novel);
@@ -120,26 +120,25 @@ public class NovelsRepository {
         NovelsDBHelper mDbHelper = new NovelsDBHelper(context);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
-        String query = "SELECT * FROM " + ReleasedChapter.TABLE_NAME +
-                            " order by " + ReleasedChapter.COLUMN_RELEASE_AT + " desc, "
-                                        + ReleasedChapter.COLUMN_NUMBER + " desc" +
-                            " LIMIT 100;";
+        String query = "SELECT * FROM " + PublishedChapter.TABLE_NAME +
+                            " order by " + PublishedChapter.COLUMN_PUBLISHED_AT + " desc, "
+                                        + PublishedChapter.COLUMN_NUMBER + " desc;";
         Cursor cursor = db.rawQuery(query, null);
         while (cursor.moveToNext()) {
             int id = cursor.getInt(cursor
-                    .getColumnIndex(ReleasedChapter._ID));
+                    .getColumnIndex(PublishedChapter._ID));
             int novelId = cursor.getInt(cursor
-                    .getColumnIndex(ReleasedChapter.COLUMN_NOVEL_ID));
+                    .getColumnIndex(PublishedChapter.COLUMN_NOVEL_ID));
             String number = cursor.getString(cursor
-                    .getColumnIndex(ReleasedChapter.COLUMN_NUMBER));
+                    .getColumnIndex(PublishedChapter.COLUMN_NUMBER));
             String title = cursor.getString(cursor
-                    .getColumnIndex(ReleasedChapter.COLUMN_TITLE));
+                    .getColumnIndex(PublishedChapter.COLUMN_TITLE));
             String url = cursor.getString(cursor
-                    .getColumnIndex(ReleasedChapter.COLUMN_URL));
+                    .getColumnIndex(PublishedChapter.COLUMN_URL));
             String status = cursor.getString(cursor
-                    .getColumnIndex(ReleasedChapter.COLUMN_STATUS));
-            Long releaseAt = cursor.getLong(cursor
-                    .getColumnIndex(ReleasedChapter.COLUMN_RELEASE_AT));
+                    .getColumnIndex(PublishedChapter.COLUMN_STATUS));
+            Long publishedAt = cursor.getLong(cursor
+                    .getColumnIndex(PublishedChapter.COLUMN_PUBLISHED_AT));
 
             Chapter chapter = new Chapter();
             chapter.setId(id);
@@ -149,8 +148,8 @@ public class NovelsRepository {
             chapter.setNovel(novels.get(novelId));
             chapter.setStatus(status);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(releaseAt);
-            chapter.setReleaseDate(calendar.getTime());
+            calendar.setTimeInMillis(publishedAt);
+            chapter.setPublicationDate(calendar.getTime());
             chapters.put(id, chapter);
         }
         cursor.close();
@@ -163,14 +162,14 @@ public class NovelsRepository {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(ReleasedChapter.COLUMN_NOVEL_ID, chapter.getNovel().getId());
-        values.put(ReleasedChapter.COLUMN_NUMBER, chapter.getNumber());
-        values.put(ReleasedChapter.COLUMN_TITLE, chapter.getTitle());
-        values.put(ReleasedChapter.COLUMN_URL, chapter.getUrl());
-        values.put(ReleasedChapter.COLUMN_STATUS, chapter.getStatus());
-        values.put(ReleasedChapter.COLUMN_RELEASE_AT, chapter.getReleaseDate().getTime());
+        values.put(PublishedChapter.COLUMN_NOVEL_ID, chapter.getNovel().getId());
+        values.put(PublishedChapter.COLUMN_NUMBER, chapter.getNumber());
+        values.put(PublishedChapter.COLUMN_TITLE, chapter.getTitle());
+        values.put(PublishedChapter.COLUMN_URL, chapter.getUrl());
+        values.put(PublishedChapter.COLUMN_STATUS, chapter.getStatus());
+        values.put(PublishedChapter.COLUMN_PUBLISHED_AT, chapter.getPublicationDate().getTime());
 
-        long newRowId = db.insert(ReleasedChapter.TABLE_NAME, null, values);
+        long newRowId = db.insert(PublishedChapter.TABLE_NAME, null, values);
 
         return newRowId != -1;
     }

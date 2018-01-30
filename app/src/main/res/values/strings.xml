@@ -19,8 +19,12 @@
     <string name="menu_popup_favorites_open_url">Open url in browser</string>
     <string name="menu_popup_favorites_remove">Remove from favorites</string>
 
+    <!-- Actions values -->
+    <string name="action_refresh">Refresh</string>
+    <string name="action_delete">Delete</string>
+
     <!-- Notification values -->
-    <string name="notification_new_chapter">New chapter released !</string>
+    <string name="notification_new_chapter">New chapter published !</string>
 
     <!-- Settings values -->
     <string name="settings_application_title">Application</string>
@@ -41,7 +45,7 @@
 
     <!-- Arrays values -->
     <string name="last_update_filters_all">All chapters</string>
-    <string name="last_update_filters_today">Released today</string>
+    <string name="last_update_filters_today">Published today</string>
 
     <string name="theme_dark">Dark theme</string>
     <string name="theme_light">Light theme</string>
@@ -54,20 +58,21 @@
     <string name="time_12_hour_title">12 hour</string>
     <string name="time_1_day_title">1 day</string>
 
-    <!-- Last update fragment values -->
+    <!-- Last updates fragment values -->
     <string name="last_update_date_title">Last update from servers: </string>
     <string name="last_update_date_process">Wait refresh…</string>
 
     <string name="list_empty_text">No Results</string>
 
     <string name="list_item_last_update_novel">Novel</string>
-    <string name="list_item_last_update_release">Release</string>
+    <string name="list_item_last_update_publication">Published</string>
     <string name="list_item_last_update_number">Number</string>
     <string name="list_item_last_update_caption">Caption</string>
 
+    <!-- Novels fragment values -->
     <string name="list_item_novel_short_name">Short Name</string>
     <string name="list_item_novel_name">Name</string>
     <string name="list_item_novel_last_chapter_number">Number</string>
     <string name="list_item_novel_last_chapter_title">Title</string>
-    <string name="list_item_novel_last_chapter_release">Release</string>
+    <string name="list_item_novel_last_chapter_publication">Published</string>
 </resources>

@@ -93,7 +93,7 @@ public class Refresher {
                             Bitmap largeIcon = new ImageManager(mContext).getImage(chapter.getNovel().getImageUrl());
                             mNotifyManager.show(
                                     mNotifyManager.create(mContext.getResources().getString(R.string.notification_new_chapter), text)
-                                            .setWhen(chapter.getReleaseDate().getTime())
+                                            .setWhen(chapter.getPublicationDate().getTime())
                                             .setLargeIcon(largeIcon)
                                             .setContentIntent(pIntent)
                                             .build());
@@ -106,7 +106,7 @@ public class Refresher {
 
                         String text = "New chapters count is " + newChaptersCount;
                         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-                        inboxStyle.setBigContentTitle("List of released chapters:");
+                        inboxStyle.setBigContentTitle("List of published chapters:");
                         for (Chapter chapter : newChapters) {
                             inboxStyle.addLine(String.format("(%s) [%s] %s",
                                     chapter.getNovel().getShortName(), chapter.getNumber(), chapter.getTitle()));
@@ -140,7 +140,7 @@ public class Refresher {
                         List<Chapter> newNovelChapters = new ArrayList<>();
                         for (Chapter chapter : chapters) {
                             if (novel.getLastUpdate() == null ||
-                                    novel.getLastUpdate().before(chapter.getReleaseDate())) {
+                                    novel.getLastUpdate().before(chapter.getPublicationDate())) {
                                 if (NovelsRepository.addChapter(mContext, chapter)) {
                                     newNovelChapters.add(chapter);
                                 }

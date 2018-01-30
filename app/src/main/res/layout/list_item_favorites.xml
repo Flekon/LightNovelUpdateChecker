@@ -7,7 +7,8 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:baselineAligned="false">
 
         <RelativeLayout
             android:id="@+id/list_item_favorites_refresh_view"
@@ -31,7 +32,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginStart="@dimen/padd_10"
                 android:layout_toEndOf="@id/refresh_icon"
-                android:text="Refresh"
+                android:text="@string/action_refresh"
                 android:textColor="#fff"
                 android:textSize="13sp" />
 
@@ -59,7 +60,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/padd_10"
                 android:layout_toStartOf="@id/delete_icon"
-                android:text="Delete"
+                android:text="@string/action_delete"
                 android:textColor="#fff"
                 android:textSize="13sp" />
 
@@ -124,10 +125,10 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/list_item_novel_last_chapter_release"
+                    android:id="@+id/list_item_novel_last_chapter_published"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/list_item_novel_last_chapter_release"
+                    android:text="@string/list_item_novel_last_chapter_publication"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:textSize="14sp" />
 

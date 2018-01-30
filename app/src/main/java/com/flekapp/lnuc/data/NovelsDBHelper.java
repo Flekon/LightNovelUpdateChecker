@@ -5,13 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.flekapp.lnuc.data.NovelsContract.FavoriteNovels;
-import com.flekapp.lnuc.data.NovelsContract.ReleasedChapter;
+import com.flekapp.lnuc.data.NovelsContract.PublishedChapter;
 
 public class NovelsDBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "lnuc.db";
     private static final int DATABASE_VERSION = 1;
 
-    public NovelsDBHelper(Context context) {
+    NovelsDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
@@ -27,15 +27,15 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
 
         db.execSQL(SQL_CREATE_FAVORITE_NOVELS_TABLE);
 
-        String SQL_CREATE_CHAPTERS_TABLE = "CREATE TABLE " + ReleasedChapter.TABLE_NAME + " ("
-                + ReleasedChapter.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + ReleasedChapter.COLUMN_NOVEL_ID + " INTEGER NOT NULL, "
-                + ReleasedChapter.COLUMN_NUMBER + " TEXT NOT NULL, "
-                + ReleasedChapter.COLUMN_TITLE + " TEXT NOT NULL, "
-                + ReleasedChapter.COLUMN_URL + " TEXT UNIQUE NOT NULL, "
-                + ReleasedChapter.COLUMN_STATUS + " TEXT NOT NULL, "
-                + ReleasedChapter.COLUMN_RELEASE_AT + " INTEGER NOT NULL," +
-                " FOREIGN KEY (" + ReleasedChapter.COLUMN_NOVEL_ID + ")" +
+        String SQL_CREATE_CHAPTERS_TABLE = "CREATE TABLE " + PublishedChapter.TABLE_NAME + " ("
+                + PublishedChapter.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + PublishedChapter.COLUMN_NOVEL_ID + " INTEGER NOT NULL, "
+                + PublishedChapter.COLUMN_NUMBER + " TEXT NOT NULL, "
+                + PublishedChapter.COLUMN_TITLE + " TEXT NOT NULL, "
+                + PublishedChapter.COLUMN_URL + " TEXT UNIQUE NOT NULL, "
+                + PublishedChapter.COLUMN_STATUS + " TEXT NOT NULL, "
+                + PublishedChapter.COLUMN_PUBLISHED_AT + " INTEGER NOT NULL," +
+                " FOREIGN KEY (" + PublishedChapter.COLUMN_NOVEL_ID + ")" +
                 " REFERENCES " + FavoriteNovels.TABLE_NAME + "(" + FavoriteNovels.COLUMN_ID + ")" +
                 " ON DELETE CASCADE);";
 

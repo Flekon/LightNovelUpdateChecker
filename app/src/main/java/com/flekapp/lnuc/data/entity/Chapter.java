@@ -9,7 +9,7 @@ public class Chapter {
     private String title;
     private String url;
     private String status;
-    private Date releaseDate;
+    private Date publicationDate;
 
     public Integer getId() {
         return id;
@@ -59,11 +59,11 @@ public class Chapter {
         this.status = status;
     }
 
-    public Date getReleaseDate() {
-        return releaseDate;
+    public Date getPublicationDate() {
+        return publicationDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setPublicationDate(Date publicationDate) {
+        this.publicationDate = publicationDate;
     }
 }

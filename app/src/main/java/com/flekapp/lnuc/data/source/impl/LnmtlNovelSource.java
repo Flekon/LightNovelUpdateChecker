@@ -147,9 +147,9 @@ public class LnmtlNovelSource implements NovelSource {
                     chapter.setUrl(url);
                     chapter.setStatus(status);
                     try {
-                        chapter.setReleaseDate(DATE_FORMAT.parse(date));
+                        chapter.setPublicationDate(DATE_FORMAT.parse(date));
                     } catch (ParseException e) {
-                        chapter.setReleaseDate(new Date());
+                        chapter.setPublicationDate(new Date());
                     }
 
                     newChapters.add(chapter);
