@@ -114,21 +114,22 @@ public class LnmtlNovelSource implements NovelSource {
                     .get();
             Elements chapters = doc.select("table tr");
 
-            Boolean isNotCompleted = true;
-
+            Novel.Status novelStatus = Novel.Status.ONGOING;
             Elements infoItems = doc.select(".panel-body dl");
             for (Element element : infoItems) {
                 String name = element.select("dt").text();
                 if (name != null && "Current status".equals(name.trim())) {
                     String status = element.select("dd").text();
                     if (status != null && "Completed".equals(status.trim())) {
-                        isNotCompleted = false;
+                        novelStatus = Novel.Status.COMPLETED;
                         break;
                     }
                 }
             }
 
-            if (isNotCompleted) {
+            novel.setStatus(novelStatus);
+
+            if (novelStatus == Novel.Status.ONGOING) {
                 Iterator<Element> it = chapters.iterator();
                 int count = LAST_CHAPTERS_COUNT;
                 while (it.hasNext() && count > 0) {

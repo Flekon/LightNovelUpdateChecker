@@ -135,19 +135,22 @@ public class Refresher {
                     NovelSource source = NovelSourceFactory.getSource(novel.getSource());
                     if (source != null) {
                         List<Chapter> chapters = source.getLastChapters(novel);
-                        Collections.reverse(chapters);
+                        // TODO update novel status !
+                        if (novel.getStatus() == Novel.Status.ONGOING) {
+                            Collections.reverse(chapters);
 
-                        List<Chapter> newNovelChapters = new ArrayList<>();
-                        for (Chapter chapter : chapters) {
-                            if (novel.getLastUpdate() == null ||
-                                    novel.getLastUpdate().before(chapter.getPublicationDate())) {
-                                if (NovelsRepository.addChapter(mContext, chapter)) {
-                                    newNovelChapters.add(chapter);
+                            List<Chapter> newNovelChapters = new ArrayList<>();
+                            for (Chapter chapter : chapters) {
+                                if (novel.getLastUpdate() == null ||
+                                        novel.getLastUpdate().before(chapter.getPublicationDate())) {
+                                    if (NovelsRepository.addChapter(mContext, chapter)) {
+                                        newNovelChapters.add(chapter);
+                                    }
                                 }
                             }
-                        }
 
-                        newChapters.addAll(newNovelChapters);
+                            newChapters.addAll(newNovelChapters);
+                        }
                     }
                 }
                 mBackgroundWorking = false;

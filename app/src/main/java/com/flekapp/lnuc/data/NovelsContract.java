@@ -12,6 +12,7 @@ class NovelsContract {
         final static String COLUMN_SOURCE = "SOURCE";
         final static String COLUMN_URL = "URL";
         final static String COLUMN_IMAGE_URL = "IMAGE_URL";
+        final static String COLUMN_STATUS = "STATUS";
     }
 
     static final class PublishedChapter implements BaseColumns {

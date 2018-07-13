@@ -3,12 +3,36 @@ package com.flekapp.lnuc.data.entity;
 import java.util.Date;
 
 public class Novel {
+    public enum Status {
+        ONGOING(0), COMPLETED(1);
+
+        private int code;
+
+        Status(int code) {
+            this.code = code;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public static Status getByCode(int code) {
+            switch (code) {
+                case 1:
+                    return Status.COMPLETED;
+                default:
+                    return Status.ONGOING;
+            }
+        }
+    }
+
     private Integer id;
-    private String imageUrl;
     private String name;
     private String shortName;
     private Source source;
     private String url;
+    private String imageUrl;
+    private Status status;
     private String lastChapterNumber;
     private String lastChapterTitle;
     private Date lastUpdate;
@@ -19,14 +43,6 @@ public class Novel {
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -59,6 +75,22 @@ public class Novel {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public String getLastChapterNumber() {

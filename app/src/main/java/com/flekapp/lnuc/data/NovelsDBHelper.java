@@ -22,8 +22,9 @@ public class NovelsDBHelper extends SQLiteOpenHelper {
                 + FavoriteNovels.COLUMN_NAME + " TEXT NOT NULL, "
                 + FavoriteNovels.COLUMN_SHORT_NAME + " TEXT NOT NULL, "
                 + FavoriteNovels.COLUMN_SOURCE + " TEXT NOT NULL, "
-                + FavoriteNovels.COLUMN_URL + " TEXT UNIQUE NOT NULL,"
-                + FavoriteNovels.COLUMN_IMAGE_URL + " TEXT NOT NULL);";
+                + FavoriteNovels.COLUMN_URL + " TEXT UNIQUE NOT NULL, "
+                + FavoriteNovels.COLUMN_IMAGE_URL + " TEXT NOT NULL, "
+                + FavoriteNovels.COLUMN_STATUS + " INTEGER NOT NULL);";
 
         db.execSQL(SQL_CREATE_FAVORITE_NOVELS_TABLE);
 

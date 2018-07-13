@@ -53,6 +53,8 @@ public class NovelsRepository {
                     .getColumnIndex(FavoriteNovels.COLUMN_URL));
             String imageUrl = cursor.getString(cursor
                     .getColumnIndex(FavoriteNovels.COLUMN_IMAGE_URL));
+            Integer status = cursor.getInt(cursor
+                    .getColumnIndex(FavoriteNovels.COLUMN_STATUS));
             String lastChapterNumber = cursor.getString(cursor
                     .getColumnIndex("lastChapterNumber"));
             String lastChapterTitle = cursor.getString(cursor
@@ -69,6 +71,7 @@ public class NovelsRepository {
             novel.setShortName(shortName);
             novel.setUrl(url);
             novel.setImageUrl(imageUrl);
+            novel.setStatus(Novel.Status.getByCode(status));
             novel.setSource(Source.getByName(source));
             novel.setLastChapterNumber(lastChapterNumber);
             novel.setLastChapterTitle(lastChapterTitle);
